@@ -1,5 +1,5 @@
 name: test and deploy to prod
-run-name: ${{ github.actor }} is learning GitHub Actions
+run-name: test and deploy to prod
 on:
   push:
     branches:
