@@ -29,7 +29,13 @@ jobs:
         env:
           NODE_ENV: production
           DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
-      - name: Update database schema version
+          name: Configure Git
+          run: |
+            git config user.name "GitHub Action"
+            git config user.email "action@github.com"
+      - name: Merge main into production
         run: |
-          echo "Update database schema version"
-          echo "Database schema version updated"
+          git fetch origin production:production
+          git checkout production
+          git merge --ff-only main
+          git push origin production
