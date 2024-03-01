@@ -34,12 +34,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="min-h-screen">
         <header className="sm:w-full sm:flex sm:flex-col sm:bg-slate-800 sm:py-4 text-white">
           <h1 className="text-3xl w-fit m-auto">Steven Junio</h1>
           <hr className="w-[calc(100%-40px)] m-auto my-2" />
           <nav className="" id="main-nav">
-            <ul className="flex justify-center gap-4 text-xl">
+            <ul className="flex justify-center gap-4 text-xl mt-1">
               {navMenu.map((item) => (
                 <NavItem item={item} key={item.title} />
               ))}
