@@ -1,25 +1,51 @@
 "use client";
-import { Editor } from "@tinymce/tinymce-react";
 
-export function TinyMceRichTextEditor() {
+import { useState, useRef } from "react";
+import { Editor } from "@tinymce/tinymce-react";
+import { TinyMCE } from "tinymce";
+export type TinyMceRichTextEditorProps = {
+  name: string;
+};
+export function TinyMceRichTextEditor({ name }: TinyMceRichTextEditorProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const editorRef = useRef<Editor | null>(null);
+
   return (
-    <Editor
-      apiKey="YOUR_API_KEY"
-      initialValue="<p>This is the initial content of the editor</p>"
-      init={{
-        height: 500,
-        menubar: false,
-        plugins: [
-          "advlist autolink lists link image charmap print preview anchor",
-          "searchreplace visualblocks code fullscreen",
-          "insertdatetime media table paste code help wordcount",
-        ],
-        toolbar:
-          "undo redo | formatselect | " +
-          "bold italic backcolor | alignleft aligncenter " +
-          "alignright alignjustify | bullist numlist outdent indent | " +
-          "removeformat | help",
-      }}
-    />
+    <>
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <div className="min-h-[500px] bg-white rounded-lg">
+          <Editor
+            apiKey="qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc"
+            ref={editorRef}
+            textareaName="content"
+            init={{
+              placeholder: "Blog content",
+              height: 500,
+              menubar: false,
+              plugins: [
+                "advlist autolink lists link image charmap print preview anchor",
+                "searchreplace visualblocks code fullscreen",
+                "insertdatetime media table paste code help wordcount",
+              ],
+              toolbar:
+                "undo redo | formatselect | " +
+                "bold italic backcolor | alignleft aligncenter " +
+                "alignright alignjustify | bullist numlist outdent indent | " +
+                "removeformat | help",
+            }}
+          />
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              console.log(editorRef.current?.editor);
+            }}
+          >
+            get content
+          </button>
+        </div>
+      )}
+    </>
   );
 }

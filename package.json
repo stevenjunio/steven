@@ -13,9 +13,9 @@
   "dependencies": {
     "@prisma/client": "^5.10.2",
     "@tinymce/tinymce-react": "^4.3.2",
+    "@types/tinymce": "^4.6.9",
     "next": "14.1.0",
-    "react": "^18",
-    "react-dom": "^18"
+    "react-draft-wysiwyg": "^1.15.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.21",
@@ -23,6 +23,7 @@
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
     "concurrently": "^8.2.2",
+    "draft-js": "^0.11.7",
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
     "postcss": "^8",
