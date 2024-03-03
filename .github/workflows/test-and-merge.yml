@@ -33,5 +33,3 @@ jobs:
           run: |
             git config user.name "GitHub Action"
             git config user.email "action@github.com"
-      - name: Merge main into production
-        run: |
