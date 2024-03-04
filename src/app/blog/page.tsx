@@ -8,7 +8,6 @@ export const dynamic = "auto";
 export const dynamicParams = true;
 export const revalidate = 120;
 export const runtime = "node";
-export const preferredRegion = "auto";
 
 export default async function Blog() {
   const prisma = new PrismaClient().$extends(withAccelerate());
