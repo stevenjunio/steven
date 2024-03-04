@@ -17,7 +17,7 @@ export default function SubmitBlogPostForm() {
         type="text"
         name="title"
         placeholder="Blog title"
-        className="p-4"
+        className="p-4 text-black"
         id="title"
       />
       <TinyMceRichTextEditor name="content" />
