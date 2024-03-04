@@ -7,7 +7,7 @@ import Link from "next/link";
 export const dynamic = "auto";
 export const dynamicParams = true;
 export const revalidate = 120;
-export const runtime = "node";
+export const runtime = "nodej";
 
 export default async function Blog() {
   const prisma = new PrismaClient().$extends(withAccelerate());
