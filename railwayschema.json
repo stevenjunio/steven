@@ -1,0 +1,269 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "build": {
+      "type": "object",
+      "properties": {
+        "builder": {
+          "type": "string",
+          "enum": ["NIXPACKS", "DOCKERFILE", "HEROKU", "PAKETO"],
+          "description": "Set the builder for the deployment"
+        },
+        "watchPatterns": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Array of patterns used to conditionally trigger a deploys"
+          }
+        },
+        "buildCommand": {
+          "anyOf": [
+            {
+              "anyOf": [
+                { "not": {} },
+                {
+                  "type": "string",
+                  "description": "Build command to pass to the Nixpacks builder"
+                }
+              ]
+            },
+            { "type": "null" }
+          ]
+        },
+        "dockerfilePath": {
+          "anyOf": [
+            {
+              "anyOf": [
+                { "not": {} },
+                {
+                  "type": "string",
+                  "description": "Location of non-standard Dockerfile"
+                }
+              ]
+            },
+            { "type": "null" }
+          ]
+        },
+        "nixpacksConfigPath": {
+          "anyOf": [
+            {
+              "anyOf": [
+                { "not": {} },
+                {
+                  "type": "string",
+                  "description": "Location of a non-standard Nixpacks config file"
+                }
+              ]
+            },
+            { "type": "null" }
+          ]
+        },
+        "nixpacksPlan": {
+          "anyOf": [
+            {
+              "anyOf": [
+                { "not": {} },
+                {
+                  "type": "object",
+                  "properties": {
+                    "providers": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "phases": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "name": { "type": "string" },
+                          "dependsOn": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          },
+                          "cmds": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          },
+                          "nixPkgs": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          },
+                          "nixLibs": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          },
+                          "aptPkgs": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          },
+                          "nixOverlays": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          },
+                          "nixPkgsArchive": { "type": "string" },
+                          "includedFiles": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          },
+                          "cacheDirectories": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          },
+                          "paths": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          }
+                        },
+                        "additionalProperties": false,
+                        "description": "Single Nixpacks phase"
+                      }
+                    }
+                  },
+                  "additionalProperties": true,
+                  "description": "Full nixpacks plan. See https://nixpacks.com/docs/configuration/file for more info"
+                }
+              ]
+            },
+            { "type": "null" }
+          ]
+        },
+        "nixpacksVersion": {
+          "anyOf": [
+            {
+              "anyOf": [
+                { "not": {} },
+                {
+                  "type": "string",
+                  "description": "Version of Nixpacks to use. Must be a valid Nixpacks version. EXPERIMENTAL: USE AT YOUR OWN RISK!"
+                }
+              ]
+            },
+            { "type": "null" }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "description": "Configuration for the build step"
+    },
+    "deploy": {
+      "type": "object",
+      "properties": {
+        "startCommand": {
+          "anyOf": [
+            {
+              "anyOf": [
+                { "not": {} },
+                {
+                  "type": "string",
+                  "description": "The command to run when starting the container"
+                }
+              ]
+            },
+            { "type": "null" }
+          ]
+        },
+        "numReplicas": {
+          "anyOf": [
+            {
+              "anyOf": [
+                { "not": {} },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 50,
+                  "description": "The number of instances to run for the deployment"
+                }
+              ]
+            },
+            { "type": "null" }
+          ]
+        },
+        "healthcheckPath": {
+          "anyOf": [
+            {
+              "anyOf": [
+                { "not": {} },
+                {
+                  "type": "string",
+                  "description": "Path to check after starting your deployment to ensure it is healthy"
+                }
+              ]
+            },
+            { "type": "null" }
+          ]
+        },
+        "healthcheckTimeout": {
+          "anyOf": [
+            {
+              "anyOf": [
+                { "not": {} },
+                {
+                  "type": "number",
+                  "description": "Number of seconds to wait for the healthcheck path to become healthy"
+                }
+              ]
+            },
+            { "type": "null" }
+          ]
+        },
+        "sleepApplication": {
+          "anyOf": [
+            {
+              "anyOf": [
+                { "not": {} },
+                {
+                  "type": "boolean",
+                  "description": "Should application be stopped when inactive"
+                }
+              ]
+            },
+            { "type": "null" }
+          ]
+        },
+        "restartPolicyType": {
+          "type": "string",
+          "enum": ["ON_FAILURE", "ALWAYS", "NEVER"],
+          "description": "How to handle the deployment crashing"
+        },
+        "restartPolicyMaxRetries": {
+          "anyOf": [
+            { "anyOf": [{ "not": {} }, { "type": "number" }] },
+            { "type": "null" }
+          ]
+        },
+        "cronSchedule": {
+          "anyOf": [
+            {
+              "anyOf": [
+                { "not": {} },
+                {
+                  "type": "string",
+                  "description": "Cron schedule to run the deployment on"
+                }
+              ]
+            },
+            { "type": "null" }
+          ]
+        },
+        "region": {
+          "anyOf": [
+            {
+              "anyOf": [
+                { "not": {} },
+                {
+                  "type": "string",
+                  "description": "Region to deploy to. Only available for Pro plan deploys"
+                }
+              ]
+            },
+            { "type": "null" }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "description": "Configuration for the deploy step"
+    }
+  },
+  "additionalProperties": false
+}
