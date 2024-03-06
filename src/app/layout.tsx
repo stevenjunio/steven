@@ -1,4 +1,6 @@
 import "./globals.css";
+import { UserProvider } from "@auth0/nextjs-auth0/client";
+
 import HideableHeader from "./components/HideableHeader";
 
 export const metadata = {
@@ -13,10 +15,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen">
-        <HideableHeader />
-        {children}
-      </body>
+      <UserProvider>
+        <body className="min-h-screen">
+          <HideableHeader />
+          {children}
+          <a href="/api/auth/login">Login</a>
+        </body>
+      </UserProvider>
     </html>
   );
 }

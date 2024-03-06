@@ -3,6 +3,7 @@ import { withAccelerate } from "@prisma/extension-accelerate";
 
 import BlogPost from "./components/BlogPost";
 import Link from "next/link";
+import isUserAdmin from "../library/isUserAdmin";
 
 export const dynamic = "auto";
 export const dynamicParams = true;
@@ -28,9 +29,12 @@ export default async function Blog() {
 
   return (
     <div className="flex flex-col container max-w-screen-xl mx-auto gap-4">
-      <Link href={"/blog/post"} className="self-end w-fit">
-        Create
-      </Link>
+      {(await isUserAdmin()) && (
+        <Link href={"/blog/post"} className="self-end w-fit">
+          Create
+        </Link>
+      )}
+
       {posts.map((post) => {
         return <BlogPost post={post} key={post.id} />;
       })}
