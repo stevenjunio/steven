@@ -1,5 +1,5 @@
 name: test and deploy to prod
-run-name: test and deploy to prod
+run-name: test and deploy to prod on
 on:
   push:
     branches:
@@ -15,6 +15,7 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
   merge-to-production:
     runs-on: ubuntu-latest
     needs: test
@@ -22,16 +23,25 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Run database schema migration
+
+      - name: Wait for database
         run: |
-          npx prisma migrate deploy
-           echo "Database schema migration completed"
+          MAX_RETRIES=3
+          RETRY_COUNT=0
+          until npx prisma migrate deploy --schema=prisma/schema.prisma --preview-feature || [ $RETRY_COUNT -eq $MAX_RETRIES ]; do
+            RETRY_COUNT=$((RETRY_COUNT+1))
+            echo "Migration failed, retrying... (Attempt $RETRY_COUNT of $MAX_RETRIES)"
+            sleep 30
+          done
         env:
           NODE_ENV: production
           DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
-          name: Configure Git
-          run: |
-            git config user.name "GitHub Action"
-            git config user.email "action@github.com"
+
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+
       - name: Merge main into production
         run: |
+          # Your merge command here
