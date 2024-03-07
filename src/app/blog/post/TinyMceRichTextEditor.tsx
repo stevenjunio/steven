@@ -17,7 +17,7 @@ export function TinyMceRichTextEditor({ name }: TinyMceRichTextEditorProps) {
       ) : (
         <div className="min-h-[500px] bg-white rounded-lg">
           <Editor
-            apiKey="qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc"
+            apiKey="ti8pgdb1l3yhdpxt0kchnalnik3ruxmn4bcaux07mq3sf89y"
             ref={editorRef}
             textareaName="content"
             init={{
