@@ -19,7 +19,6 @@ export default function RootLayout({
         <body className="min-h-screen">
           <HideableHeader />
           {children}
-          <a href="/api/auth/login">Login</a>
         </body>
       </UserProvider>
     </html>
