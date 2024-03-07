@@ -1,4 +1,5 @@
 import { Post } from "@prisma/client";
+import Link from "next/link";
 
 interface Props {
   post: Partial<Post>;
@@ -20,12 +21,12 @@ export default function BlogPost({ post }: Props) {
           dangerouslySetInnerHTML={{ __html: truncatedContent || "" }}
         ></div>
         <div className="flex justify-end">
-          <a
+          <Link
             href={`/blog/${post.slug}`}
             className="inline-block bg-accent-1 hover:bg-accent-2 text-black px-6 py-3 rounded-full transition-colors duration-300 transform hover:scale-105 hover:shadow-lg"
           >
             Read More
-          </a>
+          </Link>
         </div>
       </div>
     </div>
