@@ -20,6 +20,13 @@ export default function SubmitBlogPostForm() {
         className="p-4 text-black"
         id="title"
       />
+      <input
+        type="text"
+        name="slug"
+        placeholder="Blog slug"
+        className="p-4 text-black"
+        id="slug"
+      />
       <TinyMceRichTextEditor name="content" />
       <SubmitBlogPostButton />
     </form>

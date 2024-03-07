@@ -9,6 +9,8 @@ export default function BlogPost({ post }: Props) {
     ?.replaceAll(/<\[^>]*>?/gm, "")
     .slice(0, 440);
 
+  console.log(post);
+
   return (
     <div className="bg-gradient-to-r from-secondary to-tertiary text-neutral rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
       <div className="p-4">
@@ -19,7 +21,7 @@ export default function BlogPost({ post }: Props) {
         ></div>
         <div className="flex justify-end">
           <a
-            href={`/blog/${post.id}`}
+            href={`/blog/${post.slug}`}
             className="inline-block bg-accent-1 hover:bg-accent-2 text-black px-6 py-3 rounded-full transition-colors duration-300 transform hover:scale-105 hover:shadow-lg"
           >
             Read More

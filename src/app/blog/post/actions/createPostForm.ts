@@ -5,6 +5,7 @@ import { PrismaClient } from "@prisma/client";
 export async function createBlogPost(formData: FormData) {
   const title = formData.get("title");
   const content = formData.get("content");
+  const slug = formData.get("slug");
   console.log(`running on the server`, title, content);
   const prisma = new PrismaClient();
 
@@ -12,6 +13,7 @@ export async function createBlogPost(formData: FormData) {
     data: {
       title: title as string,
       content: content as string,
+      slug: slug as string,
     },
   });
   prisma.$disconnect();

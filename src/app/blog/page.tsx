@@ -5,9 +5,8 @@ import BlogPost from "./components/BlogPost";
 import Link from "next/link";
 import isUserAdmin from "../library/isUserAdmin";
 
-export const dynamic = "auto";
-export const dynamicParams = true;
 export const revalidate = 120;
+
 export const runtime = "nodejs";
 
 export default async function Blog() {
@@ -18,6 +17,7 @@ export default async function Blog() {
       title: true,
       content: true,
       id: true,
+      slug: true,
     },
 
     orderBy: {
@@ -25,7 +25,6 @@ export default async function Blog() {
     },
     cacheStrategy: { ttl: 60 },
   });
-  console.log(posts);
 
   return (
     <div className="flex flex-col container max-w-screen-xl mx-auto gap-4">
