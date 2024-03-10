@@ -1,6 +1,8 @@
 "use server";
 
 import { PrismaClient } from "@prisma/client";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function createBlogPost(formData: FormData) {
   const title = formData.get("title");
@@ -17,6 +19,8 @@ export async function createBlogPost(formData: FormData) {
     },
   });
   prisma.$disconnect();
+  revalidatePath("/blog");
+  redirect("/blog");
   return {
     message: "Post created successfully",
   };
