@@ -6,7 +6,7 @@ import SubmitBlogPostForm from "./components/SubmitBlogPostForm";
 
 export default function CreateBlogPostPage() {
   return (
-    <div className="bg-gray-300 border-solid border-black border p-4 round">
+    <div className="border-solid border-black border p-4 round">
       <SubmitBlogPostForm />
     </div>
   );

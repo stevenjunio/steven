@@ -36,14 +36,6 @@ export function TinyMceRichTextEditor({ name }: TinyMceRichTextEditorProps) {
                 "removeformat | help",
             }}
           />
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              console.log(editorRef.current?.editor);
-            }}
-          >
-            get content
-          </button>
         </div>
       )}
     </>
