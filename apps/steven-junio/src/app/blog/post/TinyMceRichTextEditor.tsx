@@ -2,7 +2,6 @@
 
 import { useState, useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import { TinyMCE } from "tinymce";
 export type TinyMceRichTextEditorProps = {
   name: string;
 };
@@ -23,17 +22,16 @@ export function TinyMceRichTextEditor({ name }: TinyMceRichTextEditorProps) {
             init={{
               placeholder: "Blog content",
               height: 500,
-              menubar: false,
-              plugins: [
-                "advlist autolink lists link image charmap print preview anchor",
-                "searchreplace visualblocks code fullscreen",
-                "insertdatetime media table paste code help wordcount",
-              ],
+              menubar: true,
+              plugins: ["link", "autolink"],
+              menu: {
+                link: { title: "Insert link", items: "link" },
+              },
               toolbar:
-                "undo redo | formatselect | " +
+                "undo redo  |" +
                 "bold italic backcolor | alignleft aligncenter " +
                 "alignright alignjustify | bullist numlist outdent indent | " +
-                "removeformat | help",
+                "removeformat | link openlink unlink ",
             }}
           />
         </div>

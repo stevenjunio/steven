@@ -1,13 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import { withAccelerate } from "@prisma/extension-accelerate";
-
 import BlogPost from "./components/BlogPost";
 import Link from "next/link";
 import isUserAdmin from "../library/isUserAdmin";
 import { getSession } from "@auth0/nextjs-auth0";
 
 export const revalidate = 120;
-
 export const runtime = "nodejs";
 
 export default async function Blog() {
@@ -30,7 +28,7 @@ export default async function Blog() {
     orderBy: {
       createdAt: "desc",
     },
-    cacheStrategy: { ttl: 60 },
+    cacheStrategy: {},
   });
 
   return (

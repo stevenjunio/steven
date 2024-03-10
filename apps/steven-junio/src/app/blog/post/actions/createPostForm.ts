@@ -19,7 +19,7 @@ export async function createBlogPost(formData: FormData) {
     },
   });
   prisma.$disconnect();
-  revalidatePath("/blog");
+  revalidatePath("/blog", "page");
   redirect("/blog");
   return {
     message: "Post created successfully",

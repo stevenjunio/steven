@@ -9,7 +9,7 @@ export default function SubmitBlogPostButton() {
       className="w-fit min-w-24 min-h- p-4 rounded-md self-end bg-primary-500 text-neutral-500-500 flex items-center justify-center"
       disabled={pending}
     >
-      {!pending ? (
+      {pending ? (
         <svg
           className="animate-spin w-5 h-5"
           xmlns="http://www.w3.org/2000/svg"

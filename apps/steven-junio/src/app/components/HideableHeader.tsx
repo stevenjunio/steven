@@ -15,10 +15,12 @@ const navMenu = [
 export default async function HideableHeader() {
   return (
     <header
-      className={`sm:w-full sm:bg-gradient-to-r sm:from-secondary sm:to-tertiary sm:py-4 text-neutral sticky top-0 z-10 shadow-lg transition-all duration-300 `}
+      className={`sm:w-full bg-neutral-800 text-neutral-50 sm:py-4 text-neutral sticky top-0 z-10 shadow-lg transition-all duration-300 `}
     >
       <div className="container mx-auto px-4 flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-primary">Steven Junio</h1>
+        <h1 className="text-3xl font-bold text-primary">
+          <Link href={"/"}>Steven Junio</Link>
+        </h1>
         <nav className="hidden sm:block" id="main-nav">
           <ul className="flex gap-4 text-xl">
             {navMenu.map((item) => (

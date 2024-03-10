@@ -17,7 +17,13 @@ export default async function Blog({ params }: BlogProps) {
   });
   return (
     <div className="flex flex-col container max-w-screen-xl mx-auto gap-4">
-      {params.slug}
+      {
+        <main
+          dangerouslySetInnerHTML={{
+            __html: post?.content || "No content found",
+          }}
+        ></main>
+      }
     </div>
   );
 }
