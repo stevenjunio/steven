@@ -11,7 +11,7 @@ export default function BlogPost({ post }: Props) {
     .slice(0, 440);
 
   return (
-    <div className="bg-neutral-50 text-neutral rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+    <div className="bg-neutral-50 text-secondary-900 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
       <div className="p-4">
         <h1 className="text-2xl font-bold text-primary mb-2">{post.title}</h1>
         <div

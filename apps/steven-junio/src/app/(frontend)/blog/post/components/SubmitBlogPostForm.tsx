@@ -6,13 +6,16 @@ import SubmitBlogPostButton from "./SubmitBlogButton";
 
 export default function SubmitBlogPostForm() {
   return (
-    <form action={createBlogPost} className={"flex flex-col gap-4 "}>
+    <form
+      action={createBlogPost}
+      className={"flex flex-col gap-4 bg-background"}
+    >
       <input
         required
         type="text"
         name="title"
         placeholder="Blog title"
-        className="p-4 text-black bg-neutral-50"
+        className="p-4 text-primary bg-input border-border "
         id="title"
       />
       <input
@@ -20,7 +23,7 @@ export default function SubmitBlogPostForm() {
         type="text"
         name="slug"
         placeholder="Blog slug"
-        className="p-4 text-black bg-neutral-50"
+        className="p-4  text-primary bg-input border-border"
         id="slug"
       />
 

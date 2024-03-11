@@ -16,10 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <UserProvider>
-        <body className="min-h-screen">
-          <HideableHeader />
-          {children}
-        </body>
+        <body className="min-h-screen">{children}</body>
       </UserProvider>
     </html>
   );

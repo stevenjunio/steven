@@ -6,7 +6,7 @@ export default function SubmitBlogPostButton() {
   return (
     <button
       type="submit"
-      className="w-fit min-w-24 min-h- p-4 rounded-md self-end bg-primary-500 text-neutral-500-500 flex items-center justify-center"
+      className="w-fit min-w-24 min-h- p-4 rounded-md self-end bg-primary text-secondary flex items-center justify-center"
       disabled={pending}
     >
       {pending ? (
