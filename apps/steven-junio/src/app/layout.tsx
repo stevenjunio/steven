@@ -1,5 +1,6 @@
 import "./globals.css";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata = {
   title: "Steven Junio",
@@ -16,6 +17,7 @@ export default function RootLayout({
       <UserProvider>
         <body className="min-h-screen"> {children}</body>
       </UserProvider>
+      <SpeedInsights />
     </html>
   );
 }
