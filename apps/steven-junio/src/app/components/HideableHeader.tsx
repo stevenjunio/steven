@@ -1,4 +1,3 @@
-import isUserAdmin from "../library/isUserAdmin";
 import NavItem from "./NavItem";
 import Link from "next/link";
 // app/my-api/route.js
@@ -13,7 +12,6 @@ const navMenu = [
 ];
 
 export default async function HideableHeader() {
-  console.log(`the user is`, getSession());
   const session = await getSession();
   const user = session?.user;
   return (
