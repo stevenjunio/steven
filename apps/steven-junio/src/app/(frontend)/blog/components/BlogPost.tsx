@@ -11,7 +11,7 @@ export default function BlogPost({ post }: Props) {
     .slice(0, 440);
 
   return (
-    <div className="bg-neutral-50 text-secondary-900 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+    <div className="bg-secondary text-secondary rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
       <div className="p-4">
         <h1 className="text-2xl font-bold text-primary mb-2">{post.title}</h1>
         <div
@@ -21,7 +21,7 @@ export default function BlogPost({ post }: Props) {
         <div className="flex justify-end">
           <Link
             href={`/blog/${post.slug}`}
-            className="inline-block bg-primary-600 text-neutral-50 hover:bg-accent-2 px-6 py-3 rounded-full transition-colors duration-300 transform hover:scale-105 hover:shadow-lg"
+            className="inline-block bg-primary text-neutral-50 hover:bg-accent-2 px-6 py-3 rounded-full transition-colors duration-300 transform hover:scale-105 hover:shadow-lg"
           >
             Read More
           </Link>
