@@ -1,5 +1,4 @@
 "use client";
-import { Session, getSession } from "@auth0/nextjs-auth0";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,7 +15,6 @@ function UserMenuDropdown() {
 export default function UserMenu() {
   const [menuViisible, setMenuVisible] = useState(false);
   const user = useUser().user;
-  console.log(`user`, user);
   function handleMenuClick() {
     if (user?.email === "steven.junio91@gmail.com")
       setMenuVisible(!menuViisible);
