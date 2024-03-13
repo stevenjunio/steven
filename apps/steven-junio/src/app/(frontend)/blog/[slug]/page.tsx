@@ -18,11 +18,13 @@ export default async function Blog({ params }: BlogProps) {
   return (
     <div className="flex flex-col container max-w-screen-xl mx-auto gap-4">
       {
-        <main
-          dangerouslySetInnerHTML={{
-            __html: post?.content || "No content found",
-          }}
-        ></main>
+        <main>
+          <h1 className="text-4xl mb-2">{post?.title}</h1>
+          <div
+            id="blog-content"
+            dangerouslySetInnerHTML={{ __html: post?.content || "" }}
+          ></div>
+        </main>
       }
     </div>
   );

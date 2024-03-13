@@ -1,5 +1,3 @@
-"use client";
-
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import SubmitBlogPostForm from "./components/SubmitBlogPostForm";
 

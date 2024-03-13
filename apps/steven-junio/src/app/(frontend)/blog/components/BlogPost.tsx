@@ -15,7 +15,7 @@ export default function BlogPost({ post }: Props) {
       <div className="p-4">
         <h1 className="text-2xl font-bold text-primary mb-2">{post.title}</h1>
         <div
-          className="line-clamp-4 text-neutral leading-relaxed mb-4"
+          className="line-clamp-4 text-primary leading-relaxed mb-4"
           dangerouslySetInnerHTML={{ __html: truncatedContent || "" }}
         ></div>
         <div className="flex justify-end">
