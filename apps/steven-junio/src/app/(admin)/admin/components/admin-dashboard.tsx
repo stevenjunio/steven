@@ -1,13 +1,12 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/ui/button";
 import {
   CardTitle,
   CardDescription,
   CardHeader,
   CardContent,
   Card,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+} from "@/app/ui/card";
 import {
   DropdownMenuTrigger,
   DropdownMenuLabel,
@@ -15,7 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuContent,
   DropdownMenu,
-} from "@/components/ui/dropdown-menu";
+} from "@/app/ui/dropdown-menu";
 import {
   TableHead,
   TableRow,
@@ -23,7 +22,7 @@ import {
   TableCell,
   TableBody,
   Table,
-} from "@/components/ui/table";
+} from "@/app/ui/table";
 import { PrismaClient } from "@prisma/client";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { revalidatePath } from "next/cache";
@@ -118,11 +117,6 @@ export async function AdminDashboard() {
           <h1 className="lg:hidden text-lg font-medium">Posts</h1>
           <form className="flex items-center gap-4 ml-auto lg:gap-6 lg:w-1/3">
             <SearchIcon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-            <Input
-              className="flex-1 appearance-none border-none bg-transparent placeholder-gray-500 dark:placeholder-gray-400"
-              placeholder="Search posts..."
-              type="search"
-            />
           </form>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

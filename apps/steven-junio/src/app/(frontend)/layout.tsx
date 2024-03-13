@@ -1,4 +1,4 @@
-import HideableHeader from "../global-components/HideableHeader";
+import HideableHeader from "../components/HideableHeader";
 
 export default function RootLayout({
   children,
