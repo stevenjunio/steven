@@ -28,19 +28,9 @@ import { PrismaClient } from "@prisma/client";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { revalidatePath } from "next/cache";
 import { format } from "date-fns";
+const prisma = new PrismaClient().$extends(withAccelerate());
 
 export async function AdminDashboard() {
-  const prisma = new PrismaClient().$extends(withAccelerate());
-  const posts = await prisma.post.findMany({
-    select: {
-      id: true,
-      title: true,
-      createdAt: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
   async function deletePost(formData: FormData) {
     "use server";
     const postId = formData.get("post_id");
@@ -51,6 +41,17 @@ export async function AdminDashboard() {
     });
     revalidatePath("/admin");
   }
+
+  const posts = await prisma.post.findMany({
+    select: {
+      id: true,
+      title: true,
+      createdAt: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
