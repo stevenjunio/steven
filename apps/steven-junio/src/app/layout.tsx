@@ -15,9 +15,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <UserProvider>
-        <body className="min-h-screen"> {children}</body>
+        <body className="min-h-screen">
+          {children} <SpeedInsights />
+        </body>
       </UserProvider>
-      <SpeedInsights />
     </html>
   );
 }

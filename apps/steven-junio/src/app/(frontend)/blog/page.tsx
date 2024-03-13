@@ -28,7 +28,7 @@ export default async function Blog() {
     orderBy: {
       createdAt: "desc",
     },
-    cacheStrategy: {},
+    cacheStrategy: { ttl: 5 },
   });
 
   return (
