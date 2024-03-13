@@ -29,9 +29,8 @@ import { withAccelerate } from "@prisma/extension-accelerate";
 import { revalidatePath } from "next/cache";
 import { format } from "date-fns";
 
-const prisma = new PrismaClient().$extends(withAccelerate());
-
 export async function AdminDashboard() {
+  const prisma = new PrismaClient().$extends(withAccelerate());
   const posts = await prisma.post.findMany({
     select: {
       id: true,
