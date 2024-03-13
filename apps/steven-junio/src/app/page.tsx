@@ -1,5 +1,5 @@
 import Image from "next/image";
-import HideableHeader from "./components/HideableHeader";
+import HideableHeader from "./global-components/HideableHeader";
 
 export default function Home() {
   return (
