@@ -6,10 +6,7 @@ import UserMenu from "./UserMenu";
 import MobileMenu from "./MobileMenu";
 
 const navMenu = [
-  { title: "Home", link: "/" },
-  { title: "Blog", link: "/blog" },
-  { title: "Projects", link: "/projects" },
-  { title: "Contact", link: "/contact" },
+  { title: "Contact", link: "mailto: steven.junio91@gmail.com" },
 ];
 
 export default async function HideableHeader() {

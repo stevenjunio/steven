@@ -15,7 +15,11 @@ export default function ContactPage() {
       message: formData.get("message") as string,
     });
 
-    console.log(`running on server`, validatedData.error);
+    console.log(`running on server`, validatedData);
+    if (validatedData.success) {
+      console.log(`running on server`, validatedData.data);
+      // send email
+    }
   }
 
   return (
