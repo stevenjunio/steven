@@ -1,11 +1,12 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
-import { Sphere, Sky, OrbitControls } from "@react-three/drei";
+import { extend } from "@react-three/fiber";
+import { Sphere, Sky, OrbitControls, Html } from "@react-three/drei";
 import { Suspense, useEffect, useState } from "react";
 import { AmbientLight, Vector3 } from "three";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import SunHover from "./SunHover";
+import { createPortal } from "react-dom";
 
 const getSunPosition = (hour: number) => {
   console.log(`Hour: ${hour}`);
@@ -24,6 +25,7 @@ const Scene = ({
   const [sunPosition, setSunPosition] = useState([0, 10, -10]);
   const [sunHovered, setSunHovered] = useState(false);
   let loaded = false;
+  extend({ SunHover });
 
   useEffect(() => {
     const updateSunPosition = () => {
@@ -66,13 +68,21 @@ const Scene = ({
           }
         }}
         onPointerOver={(e) => setSunHovered(true)}
+        onPointerOut={(e) => {
+          console.log(`Pointer out`, e);
+          setSunHovered(false);
+        }}
         position={new Vector3(sunPosition[0], sunPosition[1], sunPosition[2])}
         args={[2, 15, 15]}
       >
         <meshBasicMaterial attach="material" color="yellow" alphaHash={true} />
+        {sunHovered ? (
+          <Html position={[0, 15, 0]}>
+            <SunHover />
+          </Html>
+        ) : null}
       </Sphere>
       <OrbitControls maxDistance={10} minDistance={5} />
-      {sunHovered ? <SunHover /> : null}
     </>
   );
 };

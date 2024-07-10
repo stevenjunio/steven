@@ -1,12 +1,28 @@
+import React, { useState, useEffect } from "react";
+
 export default function SunHover() {
+  const [currentTime, setCurrentTime] = useState(
+    new Date().toLocaleTimeString("en-US", { timeZone: "America/Los_Angeles" })
+  );
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(
+        new Date().toLocaleTimeString("en-US", {
+          timeZone: "America/Los_Angeles",
+        })
+      );
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
-    <>
-      <div className="z-10">
-        <h1 className="w-fit text-5xl">{`Hello, I'm Steven`}</h1>
-        <h2 className="w-fit text-3xl">
-          I develop performant, scalable software
-        </h2>
+    <div className="absolute w-fit bg-white shadow-lg rounded-lg z-50 p-2">
+      <div className="text-nowrap text-lg">San Jose, CA</div>
+      <div className="block px-4 w-fit whitespace-nowrap text-sm text-gray-700 font-semibold  rounded-t-lg  ">
+        {currentTime}
       </div>
-    </>
+    </div>
   );
 }
