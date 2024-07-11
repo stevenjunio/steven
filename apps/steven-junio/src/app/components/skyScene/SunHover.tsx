@@ -18,9 +18,9 @@ export default function SunHover() {
   }, []);
 
   return (
-    <div className="absolute w-fit bg-white shadow-lg rounded-lg z-50 p-2">
+    <div className="absolute  bg-white shadow-lg rounded-lg z-50 p-2">
       <div className="text-nowrap text-lg">San Jose, CA</div>
-      <div className="block px-4 w-fit whitespace-nowrap text-sm text-gray-700 font-semibold  rounded-t-lg  ">
+      <div className="block px-4  whitespace-nowrap text-sm text-gray-700 font-semibold  rounded-t-lg  ">
         {currentTime}
       </div>
     </div>
