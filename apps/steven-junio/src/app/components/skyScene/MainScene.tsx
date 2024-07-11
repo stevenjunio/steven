@@ -83,12 +83,15 @@ const Scene = ({
         ) : null}
       </Sphere>
       <OrbitControls
+        panSpeed={0.05}
         maxAzimuthAngle={0.3}
         minAzimuthAngle={0.1}
         minPolarAngle={0.2}
         maxPolarAngle={2}
         maxDistance={10}
         minDistance={5}
+        enablePan={false}
+        enableRotate={false}
       />
     </>
   );
