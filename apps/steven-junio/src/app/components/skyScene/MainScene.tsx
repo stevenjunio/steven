@@ -72,6 +72,13 @@ const Scene = ({
           console.log(`Pointer out`, e);
           setSunHovered(false);
         }}
+        onPointerDown={(e) => {
+          console.log(`Pointer enter`, e);
+          setSunHovered(true);
+          setTimeout(() => {
+            setSunHovered(false);
+          }, 5000);
+        }}
         position={new Vector3(sunPosition[0], sunPosition[1], sunPosition[2])}
         args={[2, 15, 15]}
       >
