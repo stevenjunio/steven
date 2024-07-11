@@ -48,7 +48,7 @@ const Scene = ({
           turbidity={0}
           rayleigh={0.1}
           inclination={0.51}
-          azimuth={0.35}
+          azimuth={0.55}
           distance={1000}
         />
       ) : null}
@@ -77,12 +77,19 @@ const Scene = ({
       >
         <meshBasicMaterial attach="material" color="yellow" alphaHash={true} />
         {sunHovered ? (
-          <Html position={[0, 15, 0]}>
+          <Html position={[0, 10, 0]}>
             <SunHover />
           </Html>
         ) : null}
       </Sphere>
-      <OrbitControls maxDistance={10} minDistance={5} />
+      <OrbitControls
+        maxAzimuthAngle={0.3}
+        minAzimuthAngle={0.1}
+        minPolarAngle={0.2}
+        maxPolarAngle={2}
+        maxDistance={10}
+        minDistance={5}
+      />
     </>
   );
 };
