@@ -3,36 +3,33 @@ export const projects = [
     slug: "syllabus",
     title: "Syllabus",
     image: "/images/syllabus-screenshot.webp",
-    description: "A modern syllabus management tool",
+    description: "A modern SEO analysis tool",
   },
   {
     slug: "my-daily-workouts-co",
     title: "MyDailyWorkoutsCo",
     image: "/images/MyDailyWorkoutsCo-screenshot.webp",
-    description:
-      "Custom workout routine generator that auto-generates routines, and allows users to customize them. Small early side project featured on Bubbles Blog.",
+    description: "Automated workout generator",
     technologies: ["Bubble.io", "Javascript"],
   },
   {
     slug: "outskirts",
     title: "Outskirts",
-    image: "/images/outskirts.webp",
-    description:
-      "Marketplace for buying and selling Agriculture equipment, vehicles, and services. Core Developer Lead, alongside a small team of contractors and in-house Bubble Developers. FTE.",
+    image: "/images/outskirts-screenshot.webp",
+    description: "Marketplace for buying and selling Agriculture equipment",
     technologies: ["Bubble.io", "Javascript"],
   },
   {
     slug: "electrified",
     title: "Electrified",
-    image: "/images/electrified.webp",
-    description:
-      "Marketplace for consumer to consumer sales of Electric bikes. Side project.",
+    image: "/images/electrified-screenshot.webp",
+    description: "Marketplace for c2c sale of used Electric bikes",
     technologies: ["Bubble.io"],
   },
   {
     slug: "image-cropper-plugin",
     title: "Image Cropper Plugin",
-    image: "/images/image-cropper-plugin.webp",
+    image: "/images/image-cropper-plugin-screenshot.webp",
     description:
       "Custom built plugin for Bubble that creates a cropping element. Uses cropper.js. 200+ installs.",
     technologies: ["Javascript", "HTML", "CSS"],
@@ -40,15 +37,16 @@ export const projects = [
   {
     slug: "multi-file-selector-plugin",
     title: "Multi-file Selector Plugin",
-    image: "/images/multi-file-selector-plugin.webp",
-    description:
-      "Custom built plugin for Bubble.io using Javascript/html/css. Allow for displaying images/files without uploading to aws. 150+ installs.",
+    image: "/images/multi-file-selector-and-uploader-plugin-screenshot.webp",
+    description: "Plugin that displays images/files without uploading to aws",
     technologies: ["Javascript", "HTML", "CSS"],
   },
   {
     slug: "tubey-the-tubeman",
     title: "Tubey The Tubeman",
     image: "/images/tubey-the-tubeman.webp",
+    video:
+      "https://files.stevenjunio.com/Tubey%202.0%20Website%20%20Video_FINAL_50%20mbps.mp4",
     description:
       "Tubey The Tubeman is the original Mini Wacky Wavy Inflatable Arm Flailing Tubeman. Personal Business custom manufacturing and prototyping the desktop tubeman.",
     technologies: ["Shopify"],

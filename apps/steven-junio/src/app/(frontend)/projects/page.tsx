@@ -17,13 +17,25 @@ export default function ProjectPage() {
           <Link href={`/projects/${project.slug}`} key={project.slug}>
             <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
               <Inset clip="padding-box" side="top" pb="current">
-                <Image
-                  className="w-full h-48 object-cover"
-                  src={project.image}
-                  alt={project.title}
-                  width={400}
-                  height={300}
-                />
+                {project.video ? (
+                  <video
+                    loop
+                    autoPlay={true}
+                    controls={false}
+                    muted
+                    playsInline
+                  >
+                    <source src={project.video} type="video/mp4" />
+                  </video>
+                ) : (
+                  <Image
+                    className="w-full h-48 object-cover"
+                    src={project.image}
+                    alt={project.title}
+                    width={400}
+                    height={300}
+                  />
+                )}
               </Inset>
               <Box p="4">
                 <Flex justify="between" align="center">
