@@ -19,11 +19,14 @@ export default function ProjectPage() {
               <Inset clip="padding-box" side="top" pb="current">
                 {project.video ? (
                   <video
+                    className="h-[192px]"
                     loop
                     autoPlay={true}
                     controls={false}
                     muted
                     playsInline
+                    height={300}
+                    width={400}
                   >
                     <source src={project.video} type="video/mp4" />
                   </video>

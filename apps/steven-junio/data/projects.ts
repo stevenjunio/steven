@@ -16,7 +16,7 @@ export const projects = [
     slug: "outskirts",
     title: "Outskirts",
     image: "/images/outskirts-screenshot.webp",
-    description: "Marketplace for buying and selling Agriculture equipment",
+    description: "Marketplace for Agriculture equipment",
     technologies: ["Bubble.io", "Javascript"],
   },
   {
@@ -47,24 +47,21 @@ export const projects = [
     image: "/images/tubey-the-tubeman.webp",
     video:
       "https://files.stevenjunio.com/Tubey%202.0%20Website%20%20Video_FINAL_50%20mbps.mp4",
-    description:
-      "Tubey The Tubeman is the original Mini Wacky Wavy Inflatable Arm Flailing Tubeman. Personal Business custom manufacturing and prototyping the desktop tubeman.",
+    description: "The original Mini Wacky Wavy Inflatable Arm Flailing Tubeman",
     technologies: ["Shopify"],
   },
   {
     slug: "steven-junio-com",
     title: "StevenJunio.com",
-    image: "/images/steven-junio-com.webp",
-    description:
-      "This personal portfolio site! The goal with this site was to score 100% across the board on speed tests while using a dynamic framework. This was my first project diving into Next.js",
+    image: "/images/steven-junio-screenshot.webp",
+    description: "This site",
     technologies: ["React", "Next.js", "Xano"],
   },
   {
     slug: "bubble-random-generator-plugin",
     title: "Bubble Random Generator Plugin",
-    image: "/images/bubble-random-generator-plugin.webp",
-    description:
-      "Early Custom built plugin for Bubble.io using Javascript. Server side plugin that allows Bubbler's to generate random numbers/list of numbers 3600+ installs.",
+    image: "/images/random-number-plugin.webp",
+    description: "Server side plugin that generates randoms",
     technologies: ["Bubble.io", "Javascript"],
   },
 ];
