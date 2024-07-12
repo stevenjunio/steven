@@ -8,11 +8,9 @@ import { projects } from "../../../../data/projects";
 export default function ProjectPage() {
   return (
     <main className="container mx-auto px-4 py-8">
-      <Text size="8" weight="bold" className="mb-8">
-        My Projects
-      </Text>
+      <Text size="8">My Projects</Text>
       <div
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4"
         id="projects"
       >
         {projects.map((project) => (
@@ -37,7 +35,7 @@ export default function ProjectPage() {
                     size={20}
                   />
                 </Flex>
-                <Text size="2" color="gray" className="mt-2">
+                <Text size="2" color="gray" className="mt-2 line-clamp-1">
                   {project.description}
                 </Text>
                 <Text

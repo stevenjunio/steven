@@ -1,8 +1,14 @@
 export const projects = [
   {
+    slug: "syllabus",
+    title: "Syllabus",
+    image: "/images/syllabus-screenshot.webp",
+    description: "A modern syllabus management tool",
+  },
+  {
     slug: "my-daily-workouts-co",
     title: "MyDailyWorkoutsCo",
-    image: "/images/my-daily-workouts-co.webp",
+    image: "/images/MyDailyWorkoutsCo-screenshot.webp",
     description:
       "Custom workout routine generator that auto-generates routines, and allows users to customize them. Small early side project featured on Bubbles Blog.",
     technologies: ["Bubble.io", "Javascript"],
