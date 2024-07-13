@@ -58,15 +58,27 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
       <Flex direction="column" gap="6">
         <Card>
           <Flex direction="column" gap="4">
-            <Image
-              loading="lazy"
-              width={1000}
-              height={300}
-              style={{ objectFit: "cover", maxHeight: 300 }}
-              src={project.image}
-              alt={project.title}
-              className="w-full h-auto rounded-lg "
-            />
+            {!project.video ? (
+              <Image
+                loading="lazy"
+                width={1000}
+                height={300}
+                style={{ objectFit: "cover", maxHeight: 300 }}
+                src={project.image}
+                alt={project.title}
+                className="w-full h-auto rounded-lg "
+              />
+            ) : (
+              <video
+                controls
+                autoPlay
+                playsInline
+                className="w-full max-h-[500px] rounded-lg"
+              >
+                <source src={project.video} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            )}
             <Text size="5">{project.description}</Text>
             <Text as="p" size="3" className="text-gray-700">
               {project.longDescription}

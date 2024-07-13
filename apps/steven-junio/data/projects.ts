@@ -7,13 +7,22 @@ export const projects = [
     technologies: [
       "React",
       "Next.js",
+      "Three.js",
+      "Radix UI",
       "Node.js",
-      "Vercel",
       "Tailwind CSS",
       "TypeScript",
-      "Radix UI",
       "Postgres",
+      "Zod",
+      "Prisma",
+      "Cloudflare r2",
+      "Auth0",
+      "Vercel",
     ],
+    myRole: "For funsies",
+    roleDescription:
+      "I built this site to showcase my work and document it permanently using Next.js. I used Radix UI for the design system and Tailwind CSS for styling. I used TypeScript for type safety and Vercel for deployment.",
+    startDate: new Date("September 2021"),
   },
   {
     slug: "syllabus",
@@ -47,6 +56,7 @@ export const projects = [
     title: "Outskirts",
     image: "/images/outskirts-screenshot.webp",
     description: "Marketplace for Agriculture equipment",
+    myRole: "Chief Technology Officer",
     technologies: ["Bubble.io", "Javascript", "HTML", "CSS", "node.js"],
   },
   {
