@@ -4,6 +4,12 @@ import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { projects } from "../../../../data/projects";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Projects - Steven Junio",
+  description: "Steven Junio's projects",
+};
 
 export default function ProjectPage() {
   return (

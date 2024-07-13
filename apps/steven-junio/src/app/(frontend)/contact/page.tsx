@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { z } from "zod";
 
 const formSchema = z.object({
@@ -6,6 +7,10 @@ const formSchema = z.object({
   message: z.string().min(1),
 });
 
+export const metadata: Metadata = {
+  title: "Contact Steven Junio",
+  description: "Contact details for Steven Junio",
+};
 export default function ContactPage() {
   async function handleContactForm(formData: FormData) {
     "use server";

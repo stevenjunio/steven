@@ -4,7 +4,16 @@ export const projects = [
     title: "StevenJunio.com",
     image: "/images/steven-junio-screenshot.webp",
     description: "This site",
-    technologies: ["React", "Next.js", "Xano"],
+    technologies: [
+      "React",
+      "Next.js",
+      "Node.js",
+      "Vercel",
+      "Tailwind CSS",
+      "TypeScript",
+      "Radix UI",
+      "Postgres",
+    ],
   },
   {
     slug: "syllabus",

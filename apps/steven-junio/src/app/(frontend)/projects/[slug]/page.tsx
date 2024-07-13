@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Heading,
-  Text,
-  Box,
-  Flex,
-  Card,
-  Badge,
-  Button,
-} from "@radix-ui/themes";
+import { Heading, Text, Box, Flex, Card, Badge } from "@radix-ui/themes";
 import { GitHubLogoIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { projects } from "../../../../../data/projects";
@@ -36,8 +28,10 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
         <Card>
           <Flex direction="column" gap="4">
             <Image
-              width={8000}
+              loading="lazy"
+              width={1000}
               height={300}
+              style={{ objectFit: "cover", maxHeight: 300 }}
               src={project.image}
               alt={project.title}
               className="w-full h-auto rounded-lg "

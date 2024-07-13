@@ -3,3 +3,5 @@
 build/**
 dist/**
 .next/**
+apps/.DS_Store
+.DS_Store
