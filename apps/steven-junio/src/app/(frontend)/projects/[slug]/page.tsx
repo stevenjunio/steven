@@ -3,7 +3,38 @@ import { Heading, Text, Box, Flex, Card, Badge } from "@radix-ui/themes";
 import { GitHubLogoIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { projects } from "../../../../../data/projects";
+import { Metadata, ResolvingMetadata } from "next";
 
+type Props = {
+  params: { slug: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const slug = params.slug;
+  const project = getProjectData(slug);
+  return {
+    title: project?.title,
+    description: project?.description.slice(0, 160),
+    openGraph: {
+      description: project?.description.slice(0, 160),
+      title: project?.title,
+      type: "website",
+      images: [
+        {
+          url: project?.image || "",
+          width: 1200,
+          height: 630,
+
+          alt: project?.title,
+        },
+      ],
+    },
+  };
+}
 export async function generateStaticParams() {
   return projects.map((project) => project);
 }
