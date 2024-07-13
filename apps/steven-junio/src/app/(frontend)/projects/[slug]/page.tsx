@@ -12,12 +12,6 @@ import { GitHubLogoIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { projects } from "../../../../../data/projects";
 
-export async function generateStaticParams() {
-  return projects.map((project) => ({
-    params: { slug: project.slug },
-  }));
-}
-
 // Mock data (replace with actual data fetching logic)
 const getProjectData = (slug: String) =>
   projects.find((project) => project.slug === slug);
