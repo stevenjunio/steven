@@ -6,10 +6,9 @@ import Link from "next/link";
 export default function Home() {
   return (
     <>
-      <HideableHeader />
       <main className="">
         {/* Parent div with relative positioning */}
-        <div className="relative  flex flex-col items-center justify-center h-[calc(100vh-68px)] w-screen">
+        <div className="relative  flex flex-col items-center justify-center h-[calc(100vh)] w-screen">
           {/* TimeOfDayScene with absolute positioning */}
           <div className="absolute top-0 right-0 bottom-0 left-0 z-0">
             <TimeOfDayScene />

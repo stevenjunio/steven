@@ -13,9 +13,7 @@ function UserMenuDropdown({ isVisible }: { isVisible: boolean }) {
           <li className="h-11 hover:underline">
             <Link href={"/"}>Home</Link>
           </li>
-          <li className="h-11 hover:underline">
-            <Link href={"/blog"}>Blog</Link>
-          </li>
+
           <li className="h-11 hover:underline">
             <Link href={"/projects"}>Projects</Link>
           </li>
