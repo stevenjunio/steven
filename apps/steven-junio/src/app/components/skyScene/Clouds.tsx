@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Cloud, Clouds } from "@react-three/drei";
+import { Cloud } from "@react-three/drei";
 
 export default function CloudsComponent({ numberOfClouds = 1 }) {
   const cloudPositions = [];
@@ -17,18 +17,23 @@ export default function CloudsComponent({ numberOfClouds = 1 }) {
     <>
       <ambientLight intensity={1.7} />
 
-      <Clouds>
+      {cloudPositions.map((position, index) => (
         <Cloud
-          opacity={0.5}
-          speed={0.15}
+          key={index}
+          opacity={0.3}
+          speed={0.1}
           color={"white"}
-          segments={200}
-          position={[0, -20, -50]}
-          bounds={[65, -10, -15]}
-          volume={7}
           //        position={[0, 6, -50]}
+
+          position={
+            new THREE.Vector3(
+              position[0],
+              Math.floor(Math.random() * (-25 - -5 + 1) + -3),
+              -15
+            )
+          }
         />
-      </Clouds>
+      ))}
     </>
   );
 }
