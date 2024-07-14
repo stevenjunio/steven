@@ -1,3 +1,5 @@
+import { start } from "repl";
+
 export const projects = [
   {
     slug: "this",
@@ -57,7 +59,10 @@ export const projects = [
     image: "/images/outskirts-screenshot.webp",
     description: "Marketplace for Agriculture equipment",
     myRole: "Chief Technology Officer",
+    roleDescription:
+      "Spearheaded technical strategy and oversaw creation of core features for web application utilizing Bubble.io, transitioning from concept to launch with 30,000+ monthly users",
     technologies: ["Bubble.io", "Javascript", "HTML", "CSS", "node.js"],
+    startDate: new Date("March 2018"),
   },
   {
     slug: "tubey-the-tubeman",
@@ -66,7 +71,11 @@ export const projects = [
     video:
       "https://files.stevenjunio.com/Tubey%202.0%20Website%20%20Video_FINAL_50%20mbps.mp4",
     description: "The original Mini Wacky Wavy Inflatable Arm Flailing Tubeman",
+    myRole: "Co-founder",
+    roleDescription:
+      "Co-founded Tubey The Tubeman, a company that creates and sells mini wacky wavy inflatable arm flailing tubemen. I was responsible for the technical strategy and implementation of the website and marketing automation. Raised $25,000+ in crowdfunding to design the original Mini Wacky Wavy Inflatable Arm Flailing Tubeman",
     technologies: ["Shopify"],
+    startDate: new Date("June 2016"),
   },
   {
     slug: "my-daily-workouts-co",
@@ -74,6 +83,10 @@ export const projects = [
     image: "/images/MyDailyWorkoutsCo-screenshot.webp",
     description: "Automated workout generator",
     technologies: ["Bubble.io", "Javascript", "HTML", "CSS"],
+    myRole: "Creater",
+    roleDescription:
+      "Created an automated workout generator for the web that automatically generated daily workout routines and automatically shared those to instagram on a page with 75k+ followers",
+    startDate: new Date("March 2017"),
   },
 
   {
@@ -81,7 +94,10 @@ export const projects = [
     title: "Electrified",
     image: "/images/electrified-screenshot.webp",
     description: "Marketplace for c2c sale of used Electric bikes",
-    technologies: ["Bubble.io"],
+    technologies: ["Bubble.io", "Javascript", "HTML", "CSS"],
+    myRole: "Creator",
+    roleDescription:
+      "Created a marketplace for the c2c sale of used electric bikes",
   },
   {
     slug: "image-cropper-plugin",
@@ -90,6 +106,8 @@ export const projects = [
     description:
       "Custom built plugin for Bubble that creates a cropping element. Uses cropper.js. 200+ installs.",
     technologies: ["Javascript", "HTML", "CSS"],
+    startDate: new Date("May 2019"),
+    myRole: "Creator",
   },
   {
     slug: "multi-file-selector-plugin",
@@ -97,6 +115,8 @@ export const projects = [
     image: "/images/multi-file-selector-and-uploader-plugin-screenshot.webp",
     description: "Plugin that displays images/files without uploading to aws",
     technologies: ["Javascript", "HTML", "CSS"],
+    startDate: new Date("May 2019"),
+    myRole: "Creator",
   },
 
   {
@@ -105,5 +125,7 @@ export const projects = [
     image: "/images/random-number-plugin.webp",
     description: "Server side plugin that generates randoms",
     technologies: ["Bubble.io", "Javascript"],
+    startDate: new Date("April 2019"),
+    myRole: "Creator",
   },
 ];
