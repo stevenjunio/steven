@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import TimeOfDayScene from "./components/TimeOfDayScene";
 import Link from "next/link";
-import { HoverCard } from "@radix-ui/themes";
 
 export default function Home() {
   return (

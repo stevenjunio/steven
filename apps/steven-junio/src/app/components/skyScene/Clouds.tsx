@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { Cloud } from "@react-three/drei";
+import { Cloud, Clouds } from "@react-three/drei";
 
-export default function Clouds({ numberOfClouds = 1 }) {
+export default function CloudsComponent({ numberOfClouds = 1 }) {
   const cloudPositions = [];
 
   // Generate random cloud positions
@@ -17,23 +17,18 @@ export default function Clouds({ numberOfClouds = 1 }) {
     <>
       <ambientLight intensity={1.7} />
 
-      {cloudPositions.map((position, index) => (
+      <Clouds>
         <Cloud
-          key={index}
-          opacity={0.3}
-          speed={0.1}
+          opacity={0.5}
+          speed={0.15}
           color={"white"}
+          segments={200}
+          position={[0, -20, -50]}
+          bounds={[65, -10, -15]}
+          volume={7}
           //        position={[0, 6, -50]}
-
-          position={
-            new THREE.Vector3(
-              position[0],
-              Math.floor(Math.random() * (-25 - -5 + 1) + -3),
-              -15
-            )
-          }
         />
-      ))}
+      </Clouds>
     </>
   );
 }

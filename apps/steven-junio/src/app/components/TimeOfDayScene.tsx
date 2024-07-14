@@ -3,8 +3,8 @@
 import { Canvas } from "@react-three/fiber";
 import { PerspectiveCamera } from "@react-three/drei";
 import { Suspense, useCallback, useEffect, useState } from "react";
-import Clouds from "./skyScene/Clouds";
 import Scene from "./skyScene/MainScene";
+import CloudsComponent from "./skyScene/Clouds";
 
 const TimeOfDayScene = () => {
   const [loading, setLoading] = useState(true);
@@ -28,7 +28,7 @@ const TimeOfDayScene = () => {
           }}
         />
 
-        <Clouds numberOfClouds={200} />
+        <CloudsComponent numberOfClouds={100} />
       </Canvas>
     </div>
   );

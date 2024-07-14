@@ -39,7 +39,9 @@ export default function ContactPage() {
         align={"center"}
       >
         <Link href={"mailto:steven.Junio91@gmail.com"}>
-          <Heading size="8">Steven.Junio91@gmail.com</Heading>
+          <Heading size="5" wrap={"pretty"}>
+            Steven.Junio91@gmail.com
+          </Heading>
         </Link>
       </Flex>
     </Container>

@@ -17,7 +17,7 @@ export default function NavItem({ item }: NavItemProps) {
         href={item.link}
         className={
           path === item.link
-            ? "bg-slate-600 p-2 rounded-md"
+            ? "p-2 hover:bg-slate-900 rounded-md"
             : "p-2 hover:bg-slate-900 rounded-md"
         }
       >

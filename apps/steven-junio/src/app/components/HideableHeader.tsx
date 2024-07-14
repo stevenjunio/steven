@@ -5,9 +5,7 @@ import { getSession } from "@auth0/nextjs-auth0";
 import UserMenu from "./UserMenu";
 import MobileMenu from "./MobileMenu";
 
-const navMenu = [
-  { title: "Contact", link: "mailto: steven.junio91@gmail.com" },
-];
+const navMenu = [{ title: "Contact", link: "/contact" }];
 
 export default async function HideableHeader() {
   const session = await getSession();
@@ -25,7 +23,7 @@ export default async function HideableHeader() {
             {navMenu.map((item) => (
               <NavItem item={item} key={item.title} />
             ))}
-            <li>
+            {/* <li>
               {user ? (
                 <UserMenu />
               ) : (
@@ -33,7 +31,7 @@ export default async function HideableHeader() {
                   <UserMenu />
                 </Link>
               )}
-            </li>
+            </li> */}
           </ul>
         </nav>
         <button
