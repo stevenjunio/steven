@@ -8,42 +8,20 @@ import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import SunHover from "./SunHover";
 import { createPortal } from "react-dom";
 
-const getSunPosition = (hour: number) => {
-  console.log(`Hour: ${hour}`);
-  //-4, 0, 1 being the start of the day
-  //0, 5, 1 being the peak of the sky
-  //4,0, 1 being the end of the day
-  //tbd dynamic sun position based on time of day in PST
-  return [-25, 25, -120];
-};
 const Scene = ({
   onLoadingChange,
 }: {
   onLoadingChange: Function;
   sunIsHovered?: Boolean;
 }) => {
-  const [sunPosition, setSunPosition] = useState([0, 15, -10]);
+  const sunPosition = [-25, 25, -120];
   const [sunHovered, setSunHovered] = useState(false);
   let loaded = false;
   extend({ SunHover });
 
-  useEffect(() => {
-    const updateSunPosition = () => {
-      const now = new Date();
-      const hour = now.getHours() + now.getMinutes() / 60;
-      setSunPosition(getSunPosition(hour));
-      console.log(`Sun position: ${sunPosition}`);
-    };
-
-    updateSunPosition();
-    const intervalId = setInterval(updateSunPosition, 1000); // Update every minute
-
-    return () => clearInterval(intervalId);
-  }, []);
-
   return (
     <>
-      {sunPosition ? (
+      {
         <Sky
           turbidity={0}
           rayleigh={0.15}
@@ -51,7 +29,7 @@ const Scene = ({
           azimuth={0.55}
           distance={35}
         />
-      ) : null}
+      }
       <EffectComposer>
         <Bloom
           intensity={3}
@@ -69,11 +47,9 @@ const Scene = ({
         }}
         onPointerOver={(e) => setSunHovered(true)}
         onPointerOut={(e) => {
-          console.log(`Pointer out`, e);
           setSunHovered(false);
         }}
         onPointerDown={(e) => {
-          console.log(`Pointer enter`, e);
           setSunHovered(true);
           setTimeout(() => {
             setSunHovered(false);
