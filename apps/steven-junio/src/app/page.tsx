@@ -17,7 +17,7 @@ export default function Home() {
           <div className="z-10 px-6 items-center flex flex-col">
             <h1 className="w-fit text-5xl font-sans inset-0 bg-black bg-opacity-30 backdrop-blur-sm rounded p-3 text-white tracking-wide ">{`Hello, I'm Steven`}</h1>
             <h2 className="w-fit text-2xl bg-black bg-opacity-30 p-3 rounded text-white mt-3">
-              I develop performant, scalable software web apps
+              A full-stack web developer
             </h2>
             {/* Buttons container */}
             <div className="flex space-x-4 mt-4 justify-center">
