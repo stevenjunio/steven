@@ -13,8 +13,8 @@ const getSunPosition = (hour: number) => {
   //-4, 0, 1 being the start of the day
   //0, 5, 1 being the peak of the sky
   //4,0, 1 being the end of the day
-
-  return [-25, 20, -120];
+  //tbd dynamic sun position based on time of day in PST
+  return [-25, 25, -120];
 };
 const Scene = ({
   onLoadingChange,
@@ -22,7 +22,7 @@ const Scene = ({
   onLoadingChange: Function;
   sunIsHovered?: Boolean;
 }) => {
-  const [sunPosition, setSunPosition] = useState([0, 10, -10]);
+  const [sunPosition, setSunPosition] = useState([0, 15, -10]);
   const [sunHovered, setSunHovered] = useState(false);
   let loaded = false;
   extend({ SunHover });
@@ -46,10 +46,10 @@ const Scene = ({
       {sunPosition ? (
         <Sky
           turbidity={0}
-          rayleigh={0.1}
+          rayleigh={0.15}
           inclination={0.51}
           azimuth={0.55}
-          distance={1000}
+          distance={35}
         />
       ) : null}
       <EffectComposer>
@@ -59,7 +59,7 @@ const Scene = ({
           luminanceSmoothing={0.025}
           kernelSize={5}
         />
-      </EffectComposer>{" "}
+      </EffectComposer>
       <Sphere
         onAfterRender={(e) => {
           if (!loaded) {
@@ -80,7 +80,7 @@ const Scene = ({
           }, 5000);
         }}
         position={new Vector3(sunPosition[0], sunPosition[1], sunPosition[2])}
-        args={[2, 15, 15]}
+        args={[2, 5, 5]}
       >
         <meshBasicMaterial attach="material" color="yellow" alphaHash={true} />
         {sunHovered ? (
