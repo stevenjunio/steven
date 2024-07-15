@@ -2,6 +2,7 @@ import "./globals.css";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "@radix-ui/themes/styles.css";
+import { Analytics } from "@vercel/analytics/react";
 import { Theme } from "@radix-ui/themes";
 import { Metadata } from "next";
 
@@ -24,6 +25,7 @@ export default function RootLayout({
         <body className="min-h-screen">
           <Theme>{children} </Theme>
           <SpeedInsights />
+          <Analytics />
         </body>
       </UserProvider>
     </html>
