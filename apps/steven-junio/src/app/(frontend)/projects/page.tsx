@@ -1,4 +1,3 @@
-import React from "react";
 import { Card, Inset, Text, Flex, Box } from "@radix-ui/themes";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";

@@ -2,6 +2,19 @@ import { start } from "repl";
 
 export const projects = [
   {
+    slug: "n8n-railway-template",
+    title: "Railway Template for n8n with workers",
+    image: "/images/railway-template-n8n-with-workers.webp",
+    description:
+      "Railway template for n8n with workers, built using Docker containers",
+    technologies: ["Docker", "n8n", "Postgres", "Node.js", "Redis"],
+    myRole: "For funsies",
+    roleDescription:
+      "I built this to provide a simple way to spin up a n8n instance with workers using Railway. It uses Docker containers to run n8n and the workers. Users can create infinite workers to scale their workflows. It also includes a Postgres database and Redis cache.",
+    startDate: new Date("September 2022"),
+    url: "https://railway.app/template/EfkjX2?referralCode=lJoDnn",
+  },
+  {
     slug: "this",
     title: "StevenJunio.com",
     image: "/images/steven-junio-screenshot.webp",
