@@ -1,15 +1,10 @@
 import NavItem from "./NavItem";
 import Link from "next/link";
-// app/my-api/route.js
-import { getSession } from "@auth0/nextjs-auth0";
-import UserMenu from "./UserMenu";
 import MobileMenu from "./MobileMenu";
 
 const navMenu = [{ title: "Contact", link: "/contact" }];
 
 export default async function HideableHeader() {
-  const session = await getSession();
-  const user = session?.user;
   return (
     <header
       className={`sm:w-full bg-foreground py-4 text-white text-neutral sticky top-0 z-10 shadow-lg transition-all duration-300 `}
