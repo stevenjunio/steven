@@ -1,9 +1,18 @@
 import React from "react";
-import { Heading, Text, Box, Flex, Card, Badge } from "@radix-ui/themes";
+import {
+  Heading,
+  Text,
+  Box,
+  Flex,
+  Card,
+  Badge,
+  Button,
+} from "@radix-ui/themes";
 import { GitHubLogoIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { projects } from "../../../../../data/projects";
 import { Metadata, ResolvingMetadata } from "next";
+import Link from "next/link";
 
 type Props = {
   params: { slug: string };
@@ -112,6 +121,18 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
             {project.roleDescription?.split("\n").map((line) => (
               <Text key={line}>{line}</Text>
             ))}
+            {project.gitHubUrl && (
+              <Link
+                href={project.gitHubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button style={{ cursor: "pointer" }}>
+                  <GitHubLogoIcon />
+                  View on GitHub
+                </Button>
+              </Link>
+            )}
           </Flex>
         </Card>
       </Flex>

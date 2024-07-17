@@ -38,6 +38,7 @@ export const projects = [
     roleDescription:
       "I built this site to showcase my work and document it permanently using Next.js. I used Radix UI for the design system and Tailwind CSS for styling. I used TypeScript for type safety and Vercel for deployment.",
     startDate: new Date("September 2021"),
+    gitHubUrl: "https://github.com/stevenjunio/steven",
   },
   {
     slug: "syllabus",
