@@ -1,6 +1,21 @@
+import { url } from "inspector";
 import { start } from "repl";
 
 export const projects = [
+  {
+    slug: "little-lemon-restaurant",
+    title: "Little Lemon Restaurant",
+    image: "/images/little-lemon-restaurant-screenshot.webp",
+    description: "Restaurant website built using React",
+    technologies: ["React", "Node.js", "react-router-dom"],
+    myRole: "To finish a long running half-finished course",
+    roleDescription:
+      "Personal project I spun up as a part of a capstone project in a React course",
+    url: "https://little-lemon-restaurant-51e.pages.dev/",
+    startDate: new Date("September 2021"),
+    gitHubUrl: "https://github.com/stevenjunio/little-lemon-restaurant",
+  },
+
   {
     slug: "n8n-railway-template",
     title: "Railway Template for n8n with workers",
