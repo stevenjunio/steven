@@ -24,7 +24,7 @@
     "@types/tinymce": "^4.6.9",
     "@vercel/speed-insights": "^1.0.10",
     "date-fns": "^3.4.0",
-    "next": "14.1.0",
+    "next": "14.2.12",
     "nodemailer": "^6.9.12",
     "react-draft-wysiwyg": "^1.15.0"
   },
