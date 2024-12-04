@@ -3,6 +3,35 @@ import { start } from "repl";
 
 export const projects = [
   {
+    slug: "SnugSafe",
+    title: "SnugSafe",
+    image: "/images/snugsafe-screenshot.png",
+    description: "SnugSafe is the cute digital file store solution",
+    technologies: [
+      "React",
+      "Tailwind CSS",
+      "Node.js",
+      "Express.js",
+      "TypeScript",
+      "PostgreSQL",
+      "Docker",
+      "Cloudflare r2",
+      "Railway",
+      "WebAuthn",
+      "TanStack Router",
+      "Prisma",
+      "Shadcn",
+      "Passkeys",
+    ],
+    myRole:
+      "Lead Developer on a group project for a Information Security course.",
+    roleDescription:
+      "Our objective was to build a security focused solution for a firm. The goal here was for us to prove that we we're able to build a secure solution for a firm. We used a variety of technologies to build this solution. We used WebAuthn for secure authentication, TanStack Router for routing, Prisma for ORM, and Shadcn for secure file storage.",
+    url: "SnugSafe.StevenJunio.com",
+    startDate: new Date("October 2024"),
+    gitHubUrl: "https://github.com/stevenjunio/SnugSafe",
+  },
+  {
     slug: "little-lemon-restaurant",
     title: "Little Lemon Restaurant",
     image: "/images/little-lemon-restaurant-screenshot.webp",
