@@ -39,12 +39,7 @@ const Scene = ({
         />
       </EffectComposer>
       <Sphere
-        onAfterRender={(e) => {
-          if (!loaded) {
-            loaded = true;
-            onLoadingChange();
-          }
-        }}
+        onAfterRender={(e) => {}}
         onPointerOver={(e) => setSunHovered(true)}
         onPointerOut={(e) => {
           setSunHovered(false);

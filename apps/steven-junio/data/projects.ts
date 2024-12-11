@@ -3,8 +3,37 @@ import { start } from "repl";
 
 export const projects = [
   {
+    slug: "syllabus",
+    title: "Syllabus",
+    importance: 10,
+    image: "/images/syllabus-screenshot.webp",
+    description: "A modern SEO analysis tool",
+    longDescription:
+      "Syllabus is a modern SEO analysis tool that helps you understand how your website is performing in search engines. It provides you with a detailed report of your website's SEO performance, including keyword rankings, backlinks, and more.",
+    technologies: [
+      "React",
+      "Next.js",
+      "Tailwind CSS",
+      "Node.js",
+      "TypeScript",
+      "PostgreSQL",
+      "Docker",
+      "Cloudflare",
+      "Railway",
+      "Playwright",
+      "Bubble.io",
+      "n8n",
+    ],
+    liveUrl: "https://syllabus.io",
+    myRole: "Senior Software Developer",
+    roleDescription:
+      "My time was split 60/40 between front-end and back-end development. I was responsible for major performance overhaul projects, on the front-end and backend. I built out major features that allowed users to deeply analyze webpage content using PIXI.js as the rendering engine. \nI implemented continuous testing utilizing Playwright. I build custom infrastructure using docker and Railway to deploy scalable testing shards to allow instant, parallel testing of webpages. \n I also built out major infrastructure changes to pull a dockerized version of n8n with workers to allow for scalable, parallelized workflows.",
+    startDate: new Date("September 2022"),
+  },
+  {
     slug: "SnugSafe",
     title: "SnugSafe",
+    importance: 9,
     image: "/images/snugsafe-screenshot.png",
     description: "SnugSafe is the cute digital file store solution",
     technologies: [
@@ -32,35 +61,9 @@ export const projects = [
     gitHubUrl: "https://github.com/stevenjunio/SnugSafe",
   },
   {
-    slug: "little-lemon-restaurant",
-    title: "Little Lemon Restaurant",
-    image: "/images/little-lemon-restaurant-screenshot.webp",
-    description: "Restaurant website built using React",
-    technologies: ["React", "Node.js", "react-router-dom"],
-    myRole: "To finish a long running half-finished course",
-    roleDescription:
-      "Personal project I spun up as a part of a capstone project in a React course",
-    url: "https://little-lemon-restaurant-51e.pages.dev/",
-    startDate: new Date("September 2021"),
-    gitHubUrl: "https://github.com/stevenjunio/little-lemon-restaurant",
-  },
-
-  {
-    slug: "n8n-railway-template",
-    title: "Railway Template for n8n with workers",
-    image: "/images/railway-template-n8n-with-workers.webp",
-    description:
-      "Railway template for n8n with workers, built using Docker containers",
-    technologies: ["Docker", "n8n", "Postgres", "Node.js", "Redis"],
-    myRole: "For funsies",
-    roleDescription:
-      "I built this to provide a simple way to spin up a n8n instance with workers using Railway. It uses Docker containers to run n8n and the workers. Users can create infinite workers to scale their workflows. It also includes a Postgres database and Redis cache.",
-    startDate: new Date("September 2022"),
-    url: "https://railway.app/template/EfkjX2?referralCode=lJoDnn",
-  },
-  {
     slug: "this",
     title: "StevenJunio.com",
+    importance: 8,
     image: "/images/steven-junio-screenshot.webp",
     description: "This site",
     technologies: [
@@ -85,35 +88,37 @@ export const projects = [
     gitHubUrl: "https://github.com/stevenjunio/steven",
   },
   {
-    slug: "syllabus",
-    title: "Syllabus",
-    image: "/images/syllabus-screenshot.webp",
-    description: "A modern SEO analysis tool",
-    longDescription:
-      "Syllabus is a modern SEO analysis tool that helps you understand how your website is performing in search engines. It provides you with a detailed report of your website's SEO performance, including keyword rankings, backlinks, and more.",
-    technologies: [
-      "React",
-      "Next.js",
-      "Tailwind CSS",
-      "Node.js",
-      "TypeScript",
-      "PostgreSQL",
-      "Docker",
-      "Cloudflare",
-      "Railway",
-      "Playwright",
-      "Bubble.io",
-      "n8n",
-    ],
-    liveUrl: "https://syllabus.io",
-    myRole: "Senior Software Developer",
+    slug: "little-lemon-restaurant",
+    title: "Little Lemon Restaurant",
+    importance: 7,
+    image: "/images/little-lemon-restaurant-screenshot.webp",
+    description: "Restaurant website built using React",
+    technologies: ["React", "Node.js", "react-router-dom"],
+    myRole: "To finish a long running half-finished course",
     roleDescription:
-      "My time was split 60/40 between front-end and back-end development. I was responsible for major performance overhaul projects, on the front-end and backend. I built out major features that allowed users to deeply analyze webpage content using PIXI.js as the rendering engine. \nI implemented continuous testing utilizing Playwright. I build custom infrastructure using docker and Railway to deploy scalable testing shards to allow instant, parallel testing of webpages. \n I also built out major infrastructure changes to pull a dockerized version of n8n with workers to allow for scalable, parallelized workflows.",
+      "Personal project I spun up as a part of a capstone project in a React course",
+    url: "https://little-lemon-restaurant-51e.pages.dev/",
+    startDate: new Date("September 2021"),
+    gitHubUrl: "https://github.com/stevenjunio/little-lemon-restaurant",
+  },
+  {
+    slug: "n8n-railway-template",
+    title: "Railway Template for n8n with workers",
+    importance: 7,
+    image: "/images/railway-template-n8n-with-workers.webp",
+    description:
+      "Railway template for n8n with workers, built using Docker containers",
+    technologies: ["Docker", "n8n", "Postgres", "Node.js", "Redis"],
+    myRole: "For funsies",
+    roleDescription:
+      "I built this to provide a simple way to spin up a n8n instance with workers using Railway. It uses Docker containers to run n8n and the workers. Users can create infinite workers to scale their workflows. It also includes a Postgres database and Redis cache.",
     startDate: new Date("September 2022"),
+    url: "https://railway.app/template/EfkjX2?referralCode=lJoDnn",
   },
   {
     slug: "outskirts",
     title: "Outskirts",
+    importance: 6,
     image: "/images/outskirts-screenshot.webp",
     description: "Marketplace for Agriculture equipment",
     myRole: "Chief Technology Officer",
@@ -125,6 +130,7 @@ export const projects = [
   {
     slug: "tubey-the-tubeman",
     title: "Tubey The Tubeman",
+    importance: 5,
     image: "/images/tubey-the-tubeman.webp",
     video:
       "https://files.stevenjunio.com/Tubey%202.0%20Website%20%20Video_FINAL_50%20mbps.mp4",
@@ -138,6 +144,7 @@ export const projects = [
   {
     slug: "my-daily-workouts-co",
     title: "MyDailyWorkoutsCo",
+    importance: 4,
     image: "/images/MyDailyWorkoutsCo-screenshot.webp",
     description: "Automated workout generator",
     technologies: ["Bubble.io", "Javascript", "HTML", "CSS"],
@@ -146,10 +153,10 @@ export const projects = [
       "Created an automated workout generator for the web that automatically generated daily workout routines and automatically shared those to instagram on a page with 75k+ followers",
     startDate: new Date("March 2017"),
   },
-
   {
     slug: "electrified",
     title: "Electrified",
+    importance: 4,
     image: "/images/electrified-screenshot.webp",
     description: "Marketplace for c2c sale of used Electric bikes",
     technologies: ["Bubble.io", "Javascript", "HTML", "CSS"],
@@ -160,6 +167,7 @@ export const projects = [
   {
     slug: "image-cropper-plugin",
     title: "Image Cropper Plugin",
+    importance: 3,
     image: "/images/image-cropper-plugin-screenshot.webp",
     description:
       "Custom built plugin for Bubble that creates a cropping element. Uses cropper.js. 200+ installs.",
@@ -170,16 +178,17 @@ export const projects = [
   {
     slug: "multi-file-selector-plugin",
     title: "Multi-file Selector Plugin",
+    importance: 3,
     image: "/images/multi-file-selector-and-uploader-plugin-screenshot.webp",
     description: "Plugin that displays images/files without uploading to aws",
     technologies: ["Javascript", "HTML", "CSS"],
     startDate: new Date("May 2019"),
     myRole: "Creator",
   },
-
   {
     slug: "bubble-random-generator-plugin",
     title: "Bubble Random Generator Plugin",
+    importance: 3,
     image: "/images/random-number-plugin.webp",
     description: "Server side plugin that generates randoms",
     technologies: ["Bubble.io", "Javascript"],

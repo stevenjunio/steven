@@ -23,15 +23,7 @@ export default function CloudsComponent({ numberOfClouds = 1 }) {
           opacity={0.3}
           speed={0.1}
           color={"white"}
-          //        position={[0, 6, -50]}
-
-          position={
-            new THREE.Vector3(
-              position[0],
-              Math.floor(Math.random() * (-25 - -5 + 1) + -3),
-              -15
-            )
-          }
+          position={new THREE.Vector3(position[0], position[1], position[2])}
         />
       ))}
     </>
