@@ -3,6 +3,32 @@ import { start } from "repl";
 
 export const projects = [
   {
+    slug: "invalid-thoughts",
+    title: "In(valid) thoughts",
+    importance: 9,
+    image: "/images/invalid-thoughts-screenshot.png",
+    description:
+      "Gather raw thoughts from redditors in a dynamic poll interface",
+    longDescription:
+      "In(valid) thoughts is a Devvit app that enables users to gather raw thoughts from redditors in an open-ended polling system. What makes it unique is its dynamic visualization where thoughts battle it out in real-time, with popular ideas becoming more prominent while less popular ones fade away.",
+    technologies: [
+      "Devvit",
+      "Redis",
+      "JavaScript",
+      "TypeScript",
+      "PostgreSQL",
+      "Bun",
+      "Google Gemini API",
+      "Railway",
+    ],
+    liveUrl: "https://www.reddit.com",
+    gitHubUrl: "https://github.com/stevenjunio/real-thoughts",
+    myRole: "Lead Developer",
+    roleDescription:
+      "I built this Devvit app for the Hack Reddit 2025 hackathon. I designed and implemented a system that allows users to submit thought-provoking questions, collect community responses, and visualize the 'battle of thoughts' as they gain or lose popularity. The app integrates Redis for user state management, a backend API for data storage, and Google Gemini API for categorizing and aggregating similar thoughts. Despite limitations with Devvit's native blocks, I created an interactive visualization that dynamically displays thoughts based on their popularity.",
+    startDate: new Date("March 2025"),
+  },
+  {
     slug: "syllabus",
     title: "Syllabus",
     importance: 10,

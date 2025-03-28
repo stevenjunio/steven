@@ -71,11 +71,15 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
               <Image
                 loading="lazy"
                 width={1000}
-                height={300}
-                style={{ objectFit: "cover", maxHeight: 300 }}
+                height={500}
+                style={{
+                  objectFit: "contain",
+                  maxWidth: "700px",
+                  margin: "0 auto",
+                }}
                 src={project.image}
                 alt={project.title}
-                className="w-full h-auto rounded-lg "
+                className="w-full rounded-lg"
               />
             ) : (
               <video
