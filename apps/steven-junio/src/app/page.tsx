@@ -18,7 +18,7 @@ export default function Home() {
           <div className="z-10 px-6 items-center flex flex-col">
             <h1 className="w-fit text-5xl font-sans inset-0 bg-black bg-opacity-30 backdrop-blur-sm rounded p-3 text-white tracking-wide ">{`Hello, I'm Steven`}</h1>
             <h2 className="w-fit text-2xl bg-black bg-opacity-30 p-3 rounded text-white mt-3">
-              A full-stack software developer
+              Software developer
             </h2>
             {/* Buttons container */}
             <div className="flex space-x-4 mt-4 justify-center">
@@ -63,7 +63,7 @@ export default function Home() {
               </svg>
             </Link>
             <Link
-              href="https://docs.google.com/document/d/18WPd2-z2g-_XGxwCSjEXWcHD5a_Hhbvl/edit?usp=sharing&ouid=116200925914091731929&rtpof=true&sd=true"
+              href="https://docs.google.com/document/d/1e0e0JipJCtlAUycl0ip2qKepGNW-EITz/edit?usp=sharing&ouid=116200925914091731929&rtpof=true&sd=true"
               target="_blank"
             >
               <svg
