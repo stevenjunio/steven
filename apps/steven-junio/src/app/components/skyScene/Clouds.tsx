@@ -3,12 +3,24 @@
 import { Cloud } from "@react-three/drei";
 import { memo, useMemo } from "react";
 
+type CloudsComponentProps = {
+  numberOfClouds: number;
+  opacity: number;
+  color: string;
+  speed: number;
+};
+
 function seededRandom(seed: number) {
   const value = Math.sin(seed * 12_989.8) * 43_758.5453;
   return value - Math.floor(value);
 }
 
-function CloudsComponent({ numberOfClouds = 1 }) {
+function CloudsComponent({
+  numberOfClouds,
+  opacity,
+  color,
+  speed,
+}: CloudsComponentProps) {
   const cloudPositions = useMemo<[number, number, number][]>(
     () =>
       Array.from({ length: numberOfClouds }, (_, index) => [
@@ -25,9 +37,11 @@ function CloudsComponent({ numberOfClouds = 1 }) {
       {cloudPositions.map((position, index) => (
         <Cloud
           key={index}
-          opacity={0.3}
-          speed={0.1}
-          color="white"
+          seed={index + 1}
+          segments={8}
+          opacity={opacity}
+          speed={speed}
+          color={color}
           position={position}
         />
       ))}

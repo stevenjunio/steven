@@ -16,6 +16,11 @@ import {
   getCelestialState,
   type CelestialState,
 } from "./skyScene/celestialTime";
+import {
+  FALLBACK_WEATHER,
+  getWeatherVisualState,
+  type WeatherSnapshot,
+} from "./skyScene/weather";
 
 type CanvasReadyProps = {
   onReady: () => void;
@@ -36,6 +41,8 @@ function CanvasReady({ onReady }: CanvasReadyProps) {
 
 const TimeOfDayScene = () => {
   const [celestial, setCelestial] = useState<CelestialState | null>(null);
+  const [weather, setWeather] =
+    useState<WeatherSnapshot>(FALLBACK_WEATHER);
   const [canvasReady, setCanvasReady] = useState(false);
 
   useEffect(() => {
@@ -54,6 +61,38 @@ const TimeOfDayScene = () => {
     };
   }, []);
 
+  useEffect(() => {
+    let isMounted = true;
+    let activeController: AbortController | null = null;
+
+    const updateWeather = async () => {
+      activeController?.abort();
+      activeController = new AbortController();
+
+      try {
+        const response = await fetch("/api/weather", {
+          signal: activeController.signal,
+        });
+
+        if (!response.ok) return;
+
+        const nextWeather = (await response.json()) as WeatherSnapshot;
+        if (isMounted) setWeather(nextWeather);
+      } catch {
+        // Keep the last known or polished fallback state when weather is offline.
+      }
+    };
+
+    void updateWeather();
+    const timer = window.setInterval(updateWeather, 5 * 60 * 1000);
+
+    return () => {
+      isMounted = false;
+      activeController?.abort();
+      window.clearInterval(timer);
+    };
+  }, []);
+
   const handleContextMenu = useCallback((event: MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
   }, []);
@@ -67,6 +106,7 @@ const TimeOfDayScene = () => {
     celestial.body === "moon"
       ? "linear-gradient(to bottom, #080b16 0%, #171927 55%, #312c2b 100%)"
       : "linear-gradient(to bottom, #60a5fa 0%, #93c5fd 45%, #9ca3af 100%)";
+  const weatherVisual = getWeatherVisualState(weather, celestial.body);
 
   return (
     <div
@@ -82,13 +122,24 @@ const TimeOfDayScene = () => {
         }}
       >
         <PerspectiveCamera makeDefault position={[0, 0, 10]} />
-        <Scene celestial={celestial} />
+        <Scene celestial={celestial} weather={weatherVisual} />
 
-        <CloudsComponent numberOfClouds={100} />
+        <CloudsComponent
+          numberOfClouds={weatherVisual.cloudCount}
+          opacity={weatherVisual.cloudOpacity}
+          color={weatherVisual.cloudColor}
+          speed={weatherVisual.cloudSpeed}
+        />
         <CanvasReady onReady={handleCanvasReady} />
       </Canvas>
 
-      <CelestialControl celestial={celestial} />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-[1] mix-blend-multiply"
+        style={{ background: weatherVisual.skyTint }}
+      />
+
+      <CelestialControl celestial={celestial} weather={weather} />
     </div>
   );
 };
