@@ -1,14 +1,14 @@
 "use client";
 
 import { Cloud } from "@react-three/drei";
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 
 function seededRandom(seed: number) {
   const value = Math.sin(seed * 12_989.8) * 43_758.5453;
   return value - Math.floor(value);
 }
 
-export default function CloudsComponent({ numberOfClouds = 1 }) {
+function CloudsComponent({ numberOfClouds = 1 }) {
   const cloudPositions = useMemo<[number, number, number][]>(
     () =>
       Array.from({ length: numberOfClouds }, (_, index) => [
@@ -34,3 +34,5 @@ export default function CloudsComponent({ numberOfClouds = 1 }) {
     </>
   );
 }
+
+export default memo(CloudsComponent);

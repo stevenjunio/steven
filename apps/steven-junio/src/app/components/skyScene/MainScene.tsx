@@ -1,55 +1,42 @@
 "use client";
 
-import { Sphere, Sky, OrbitControls, Html } from "@react-three/drei";
-import { Suspense, useState, useCallback, useMemo } from "react";
+import { OrbitControls, Sky, Stars } from "@react-three/drei";
+import { Suspense, useMemo } from "react";
 import { Vector3 } from "three";
-import { Bloom, EffectComposer } from "@react-three/postprocessing";
-import SunHover from "./SunHover";
+import type { CelestialState } from "./celestialTime";
 
-export default function Scene() {
-  const sunPosition = useMemo(() => new Vector3(-25, 25, -120), []);
-  const [sunHovered, setSunHovered] = useState(false);
+type SceneProps = {
+  celestial: CelestialState;
+};
 
-  const handlePointerOver = useCallback(() => setSunHovered(true), []);
-  const handlePointerOut = useCallback(() => setSunHovered(false), []);
-  const handlePointerDown = useCallback(() => {
-    setSunHovered(true);
-    setTimeout(() => setSunHovered(false), 5000);
-  }, []);
+export default function Scene({ celestial }: SceneProps) {
+  const skySunPosition = useMemo(
+    () => new Vector3(...celestial.skySunPosition),
+    [celestial.skySunPosition],
+  );
+
+  const isNight = celestial.body === "moon";
 
   return (
     <Suspense fallback={null}>
       <Sky
-        turbidity={0}
-        rayleigh={0.15}
-        inclination={0.51}
-        azimuth={0.55}
+        turbidity={isNight ? 4 : 2}
+        rayleigh={isNight ? 0.25 : 1.4}
+        sunPosition={skySunPosition}
         distance={35}
       />
 
-      <EffectComposer enabled multisampling={0}>
-        <Bloom
-          intensity={3}
-          luminanceThreshold={0.5}
-          luminanceSmoothing={0.025}
-          kernelSize={3}
+      {isNight && (
+        <Stars
+          radius={80}
+          depth={35}
+          count={1800}
+          factor={3}
+          saturation={0.15}
+          fade
+          speed={0.15}
         />
-      </EffectComposer>
-
-      <Sphere
-        onPointerOver={handlePointerOver}
-        onPointerOut={handlePointerOut}
-        onPointerDown={handlePointerDown}
-        position={sunPosition}
-        args={[2, 5, 5]}
-      >
-        <meshBasicMaterial attach="material" color="yellow" alphaHash />
-        {sunHovered && (
-          <Html position={[0, 10, 0]} transform occlude>
-            <SunHover />
-          </Html>
-        )}
-      </Sphere>
+      )}
 
       <OrbitControls
         panSpeed={0.05}
