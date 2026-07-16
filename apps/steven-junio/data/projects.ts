@@ -1,5 +1,32 @@
 export const projects = [
   {
+    slug: "tabiya",
+    title: "Tabiya",
+    importance: 11,
+    image: "/images/tabiya-project.png",
+    description: "A trip command center with an AI planning companion",
+    longDescription:
+      "Tabiya turns a conversation into a living trip plan, keeping itineraries, booking confirmations, tasks, reminders, shared decisions, and on-trip answers together. I built it from a real multi-country planning workflow and evolved it into a multi-tenant product with a mobile-first PWA, a native iOS app, offline support, collaborative trip data, Gmail confirmation discovery, and an AI assistant that works against durable trip state instead of producing a one-off itinerary.",
+    technologies: [
+      "React",
+      "TypeScript",
+      "Node.js",
+      "PostgreSQL",
+      "SwiftUI",
+      "Gemini API",
+      "Clerk",
+      "Stripe",
+      "Railway",
+      "IndexedDB",
+      "PWA",
+    ],
+    liveUrl: "https://gettabiya.com",
+    myRole: "Founder and Lead Developer",
+    roleDescription:
+      "I designed and built Tabiya across the product stack: the conversational planning experience, structured trip-data model, multi-tenant authentication and authorization, shared web and iOS API contracts, offline-capable PWA, native SwiftUI client, Gmail confirmation discovery, billing and usage controls, and production infrastructure. I also built evaluation and diagnostics systems to test onboarding quality, chat behavior, timeline integrity, cost, and release readiness as the product grew from a personal trip planner into a customer-facing platform.",
+    startDate: new Date("March 2026"),
+  },
+  {
     slug: "invalid-thoughts",
     title: "In(valid) thoughts",
     importance: 9,
