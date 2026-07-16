@@ -2,17 +2,12 @@ import { MetadataRoute } from "next";
 import { projects } from "../../data/projects";
 
 export default function siteMap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://stevenjunio.com";
+  const baseUrl = "https://www.stevenjunio.com";
   const staticRoutes = [
     {
       url: `${baseUrl}/`,
       changeFrequency: "weekly",
       priority: 1,
-    },
-    {
-      url: `${baseUrl}/about`,
-      changeFrequency: "weekly",
-      priority: 0.8,
     },
     {
       url: `${baseUrl}/projects`,

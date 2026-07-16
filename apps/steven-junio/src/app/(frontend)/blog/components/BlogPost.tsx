@@ -1,4 +1,4 @@
-import { Post } from "@prisma/client";
+import type { Post } from "@/generated/prisma/client";
 import Link from "next/link";
 
 interface Props {
@@ -13,7 +13,7 @@ export default function BlogPost({ post }: Props) {
   return (
     <div className="bg-secondary text-secondary rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
       <div className="p-4">
-        <h1 className="text-2xl font-bold text-primary mb-2">{post.title}</h1>
+        <h2 className="text-2xl font-bold text-primary mb-2">{post.title}</h2>
         <div
           className="line-clamp-4 text-primary leading-relaxed mb-4"
           dangerouslySetInnerHTML={{ __html: truncatedContent || "" }}

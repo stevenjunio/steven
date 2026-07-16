@@ -1,27 +1,27 @@
 "use server";
 
-import { PrismaClient } from "@prisma/client";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getPrisma } from "@/library/prisma";
+import isUserAdmin from "@/library/isUserAdmin";
 
 export async function createBlogPost(formData: FormData) {
+  if (!(await isUserAdmin())) {
+    redirect("/auth/login?returnTo=/blog/post");
+  }
+
   const title = formData.get("title");
   const content = formData.get("content");
   const slug = formData.get("slug");
-  console.log(`running on the server`, title, content);
-  const prisma = new PrismaClient();
+  const prisma = getPrisma();
 
-  const newPost = await prisma.post.create({
+  await prisma.post.create({
     data: {
       title: title as string,
       content: content as string,
       slug: slug as string,
     },
   });
-  prisma.$disconnect();
   revalidatePath("/blog", "page");
   redirect("/blog");
-  return {
-    message: "Post created successfully",
-  };
 }

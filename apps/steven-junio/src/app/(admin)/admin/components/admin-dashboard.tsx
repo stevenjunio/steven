@@ -1,12 +1,6 @@
 import Link from "next/link";
+import type { SVGProps } from "react";
 import { Button } from "@/app/ui/button";
-import {
-  CardTitle,
-  CardDescription,
-  CardHeader,
-  CardContent,
-  Card,
-} from "@/app/ui/card";
 import {
   DropdownMenuTrigger,
   DropdownMenuLabel,
@@ -23,13 +17,12 @@ import {
   TableBody,
   Table,
 } from "@/app/ui/table";
-import { PrismaClient } from "@prisma/client";
-import { withAccelerate } from "@prisma/extension-accelerate";
 import { revalidatePath } from "next/cache";
 import { format } from "date-fns";
-const prisma = new PrismaClient().$extends(withAccelerate());
+import { getPrisma } from "@/library/prisma";
 
 export async function AdminDashboard() {
+  const prisma = getPrisma();
   async function deletePost(formData: FormData) {
     "use server";
     const postId = formData.get("post_id");
@@ -202,7 +195,7 @@ export async function AdminDashboard() {
   );
 }
 
-function Package2Icon(props: any) {
+function Package2Icon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -223,7 +216,7 @@ function Package2Icon(props: any) {
   );
 }
 
-function BellIcon(props: any) {
+function BellIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -243,7 +236,7 @@ function BellIcon(props: any) {
   );
 }
 
-function HomeIcon(props: any) {
+function HomeIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -263,7 +256,7 @@ function HomeIcon(props: any) {
   );
 }
 
-function FileTextIcon(props: any) {
+function FileTextIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -286,7 +279,7 @@ function FileTextIcon(props: any) {
   );
 }
 
-function FileEditIcon(props: any) {
+function FileEditIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -307,7 +300,7 @@ function FileEditIcon(props: any) {
   );
 }
 
-function UsersIcon(props: any) {
+function UsersIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -329,7 +322,7 @@ function UsersIcon(props: any) {
   );
 }
 
-function SettingsIcon(props: any) {
+function SettingsIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -349,7 +342,7 @@ function SettingsIcon(props: any) {
   );
 }
 
-function SearchIcon(props: any) {
+function SearchIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -369,7 +362,7 @@ function SearchIcon(props: any) {
   );
 }
 
-function TrashIcon(props: any) {
+function TrashIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

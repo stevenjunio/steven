@@ -8,60 +8,68 @@ import {
   Badge,
   Button,
 } from "@radix-ui/themes";
-import { GitHubLogoIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { projects } from "../../../../../data/projects";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 type Props = {
-  params: { slug: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ slug: string }>;
 };
 
-export async function generateMetadata(
-  { params, searchParams }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const slug = params.slug;
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
   const project = getProjectData(slug);
-  return {
-    title: project?.title,
-    description: project?.description.slice(0, 160),
-    openGraph: {
-      description: project?.description.slice(0, 160),
-      title: project?.title,
-      type: "website",
-      images: [
-        {
-          url: project?.image || "",
-          width: 1200,
-          height: 630,
 
-          alt: project?.title,
-        },
-      ],
+  if (!project) {
+    return { title: "Project not found" };
+  }
+
+  return {
+    title: project.title,
+    description: project.description.slice(0, 160),
+    alternates: {
+      canonical: `/projects/${project.slug}`,
+    },
+    openGraph: {
+      description: project.description.slice(0, 160),
+      title: project.title,
+      type: "website",
+      url: `/projects/${project.slug}`,
+      images: project.image
+        ? [
+            {
+              url: project.image,
+              width: 1200,
+              height: 630,
+              alt: project.title,
+            },
+          ]
+        : undefined,
     },
   };
 }
 export async function generateStaticParams() {
-  return projects.map((project) => project);
+  return projects.map((project) => ({ slug: project.slug }));
 }
 
 // Mock data (replace with actual data fetching logic)
-const getProjectData = (slug: String) =>
+const getProjectData = (slug: string) =>
   projects.find((project) => project.slug === slug);
 
-export default function ProjectPage({ params }: { params: { slug: string } }) {
-  const project = getProjectData(params.slug);
+export default async function ProjectPage({ params }: Props) {
+  const { slug } = await params;
+  const project = getProjectData(slug);
 
   if (!project) {
-    return <Text size="5">Project not found</Text>;
+    notFound();
   }
   return (
     <Box className="container mx-auto px-4 py-8">
       <Heading size="8" className="mb-6">
-        {project?.title}
+        {project.title}
       </Heading>
 
       <Flex direction="column" gap="6">
@@ -114,7 +122,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           <Flex direction="column" gap="2">
             <Text>
               <strong>Started:</strong>{" "}
-              {project?.startDate?.toLocaleDateString("en-US", {
+              {project.startDate?.toLocaleDateString("en-US", {
                 month: "long",
                 year: "numeric",
               })}

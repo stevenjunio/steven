@@ -1,18 +1,16 @@
-import Link from "next/link";
-import BlogPost from "../components/BlogPost";
-import { PrismaClient } from "@prisma/client";
-import { withAccelerate } from "@prisma/extension-accelerate";
+import { getPrisma } from "@/library/prisma";
 
 interface BlogProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 export default async function Blog({ params }: BlogProps) {
-  const prisma = new PrismaClient().$extends(withAccelerate());
+  const { slug } = await params;
+  const prisma = getPrisma();
   const post = await prisma.post.findUnique({
     where: {
-      slug: params.slug,
+      slug,
     },
   });
   return (
@@ -29,5 +27,5 @@ export default async function Blog({ params }: BlogProps) {
     </div>
   );
 }
-export const revalidate = 120;
+export const dynamic = "force-dynamic";
 export const runtime = "nodejs";

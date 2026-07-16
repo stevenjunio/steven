@@ -1,11 +1,10 @@
-import { PrismaClient } from "@prisma/client";
-import { withAccelerate } from "@prisma/extension-accelerate";
 import BlogPost from "./components/BlogPost";
+import { getPrisma } from "@/library/prisma";
 
-export const revalidate = 120;
+export const dynamic = "force-dynamic";
 
 export default async function Blog() {
-  const prisma = new PrismaClient().$extends(withAccelerate());
+  const prisma = getPrisma();
 
   const posts = await prisma.post.findMany({
     select: {

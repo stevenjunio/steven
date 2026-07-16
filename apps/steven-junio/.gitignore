@@ -39,5 +39,7 @@ next-env.d.ts
 # turbo
 .turbo
 
+# generated Prisma client
+/src/generated/prisma
 
 

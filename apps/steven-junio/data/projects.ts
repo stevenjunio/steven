@@ -1,6 +1,3 @@
-import { url } from "inspector";
-import { start } from "repl";
-
 export const projects = [
   {
     slug: "invalid-thoughts",

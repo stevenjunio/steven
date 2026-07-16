@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import TimeOfDayScene from "./components/TimeOfDayScene";
 import Link from "next/link";
-import gitHubIcon from "@/app/icons/github.svg"; // Adjust the path as necessary
 
 export default function Home() {
   return (
@@ -22,18 +21,25 @@ export default function Home() {
             </h2>
             {/* Buttons container */}
             <div className="flex space-x-4 mt-4 justify-center">
-              <Link href="/projects">
-                <Button variant={"default"}>View Projects</Button>
-              </Link>
+              <Button asChild variant="default">
+                <Link href="/projects">View Projects</Link>
+              </Button>
 
-              <Link href={"/contact"}>
-                <Button variant={"secondary"}>Contact Me</Button>
-              </Link>
+              <Button asChild variant="secondary">
+                <Link href="/contact">Contact Me</Link>
+              </Button>
             </div>
           </div>
           <div className="absolute bottom-4 w-full flex justify-center space-x-6">
-            <Link href="https://github.com/stevenjunio" target="_blank">
+            <Link
+              href="https://github.com/stevenjunio"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Steven Junio on GitHub"
+            >
               <svg
+                aria-hidden="true"
+                focusable="false"
                 xmlns="http://www.w3.org/2000/svg"
                 x="0px"
                 y="0px"
@@ -50,8 +56,12 @@ export default function Home() {
             <Link
               href="https://www.linkedin.com/in/stevenjunio"
               target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Steven Junio on LinkedIn"
             >
               <svg
+                aria-hidden="true"
+                focusable="false"
                 xmlns="http://www.w3.org/2000/svg"
                 x="0px"
                 y="0px"
@@ -65,17 +75,21 @@ export default function Home() {
             <Link
               href="https://docs.google.com/document/d/1e0e0JipJCtlAUycl0ip2qKepGNW-EITz/edit?usp=sharing&ouid=116200925914091731929&rtpof=true&sd=true"
               target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View Steven Junio's résumé"
             >
               <svg
+                aria-hidden="true"
+                focusable="false"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="#000"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 width="50"
                 height="50"
-                stroke-width="2"
+                strokeWidth="2"
               >
                 <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
                 <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>

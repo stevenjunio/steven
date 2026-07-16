@@ -1,11 +1,11 @@
 "use client";
-import { useUser } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
 import { useState } from "react";
 
-function UserMenuDropdown({ isVisible }: { isVisible: boolean }) {
+function UserMenuDropdown() {
   return (
     <div
+      id="mobile-navigation"
       className={`w-full fixed left-0 top-[68px] h-full bg-foreground p-4 border-t-2 `}
     >
       <nav className="">
@@ -20,13 +20,6 @@ function UserMenuDropdown({ isVisible }: { isVisible: boolean }) {
           <li className="h-11 hover:underline">
             <Link href={"/contact"}>Contact</Link>
           </li>
-          {useUser().user?.email == "steven.junio91@gmail.com" ? (
-            <li className="h-11 hover:underline">
-              <Link href={"/admin"}>Admin</Link>
-            </li>
-          ) : (
-            false
-          )}
         </ol>
       </nav>
     </div>
@@ -40,7 +33,10 @@ export default function MobileMenu() {
   return (
     <div className="sm:hidden">
       <button
-        title="mobile menu"
+        aria-controls="mobile-navigation"
+        aria-expanded={menuVisible}
+        aria-label={menuVisible ? "Close navigation menu" : "Open navigation menu"}
+        title={menuVisible ? "Close menu" : "Open menu"}
         type="button"
         id="mobile-menu"
         onClick={toggleMenu}
@@ -60,7 +56,7 @@ export default function MobileMenu() {
           />
         </svg>
       </button>
-      {menuVisible && <UserMenuDropdown isVisible={menuVisible} />}
+      {menuVisible && <UserMenuDropdown />}
     </div>
   );
 }

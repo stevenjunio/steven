@@ -10,9 +10,9 @@ export default async function HideableHeader() {
       className={`sm:w-full bg-foreground py-4 text-white text-neutral sticky top-0 z-10 shadow-lg transition-all duration-300 `}
     >
       <div className="container mx-auto px-4 flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-secondary">
+        <div className="text-3xl font-bold text-secondary">
           <Link href={"/"}>Steven Junio</Link>
-        </h1>
+        </div>
         <nav className="hidden sm:block" id="main-nav">
           <ul className="flex gap-4 text-xl">
             {navMenu.map((item) => (
@@ -29,11 +29,6 @@ export default async function HideableHeader() {
             </li> */}
           </ul>
         </nav>
-        <button
-          type="button"
-          className="sm:hidden text-neutral hover:text-primary focus:outline-none"
-          title="Menu"
-        ></button>
         <MobileMenu />
       </div>
     </header>

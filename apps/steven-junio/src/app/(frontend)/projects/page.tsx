@@ -1,4 +1,4 @@
-import { Card, Inset, Text, Flex, Box } from "@radix-ui/themes";
+import { Card, Inset, Text, Flex, Box, Heading } from "@radix-ui/themes";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
@@ -6,14 +6,19 @@ import { projects } from "../../../../data/projects";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Projects - Steven Junio",
+  title: "Projects",
   description: "Steven Junio's projects",
+  alternates: {
+    canonical: "/projects",
+  },
 };
 
 export default function ProjectPage() {
   return (
     <main className="container mx-auto px-4 py-8">
-      <Text size="8">My Projects</Text>
+      <Heading as="h1" size="8">
+        My Projects
+      </Heading>
       <div
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4"
         id="projects"
