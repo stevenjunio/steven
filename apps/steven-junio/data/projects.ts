@@ -45,8 +45,6 @@ export const projects = [
       "Google Gemini API",
       "Railway",
     ],
-    liveUrl: "https://www.reddit.com",
-    gitHubUrl: "https://github.com/stevenjunio/real-thoughts",
     myRole: "Lead Developer",
     roleDescription:
       "I built this Devvit app for the Hack Reddit 2025 hackathon. I designed and implemented a system that allows users to submit thought-provoking questions, collect community responses, and visualize the 'battle of thoughts' as they gain or lose popularity. The app integrates Redis for user state management, a backend API for data storage, and Google Gemini API for categorizing and aggregating similar thoughts. Despite limitations with Devvit's native blocks, I created an interactive visualization that dynamically displays thoughts based on their popularity.",
@@ -103,10 +101,9 @@ export const projects = [
       "Passkeys",
     ],
     myRole:
-      "Lead Developer on a group project for a Information Security course.",
+      "Lead Developer on a group project for an Information Security course.",
     roleDescription:
-      "Our objective was to build a security focused solution for a firm. The goal here was for us to prove that we we're able to build a secure solution for a firm. We used a variety of technologies to build this solution. We used WebAuthn for secure authentication, TanStack Router for routing, Prisma for ORM, and Shadcn for secure file storage.",
-    url: "SnugSafe.StevenJunio.com",
+      "Our objective was to build a security-focused solution for a firm and demonstrate that we could deliver it securely. We used WebAuthn for authentication, TanStack Router for routing, Prisma as the ORM, and Shadcn for the interface.",
     startDate: new Date("October 2024"),
     gitHubUrl: "https://github.com/stevenjunio/SnugSafe",
   },
@@ -163,12 +160,12 @@ export const projects = [
     roleDescription:
       "I built this to provide a simple way to spin up a n8n instance with workers using Railway. It uses Docker containers to run n8n and the workers. Users can create infinite workers to scale their workflows. It also includes a Postgres database and Redis cache.",
     startDate: new Date("September 2022"),
-    url: "https://railway.app/template/EfkjX2?referralCode=lJoDnn",
+    url: "https://railway.com/deploy/EfkjX2",
   },
   {
     slug: "outskirts",
     title: "Outskirts",
-    importance: 6,
+    importance: 9,
     image: "/images/outskirts-screenshot.webp",
     description: "Marketplace for Agriculture equipment",
     myRole: "Chief Technology Officer",
@@ -198,7 +195,7 @@ export const projects = [
     image: "/images/MyDailyWorkoutsCo-screenshot.webp",
     description: "Automated workout generator",
     technologies: ["Bubble.io", "Javascript", "HTML", "CSS"],
-    myRole: "Creater",
+    myRole: "Creator",
     roleDescription:
       "Created an automated workout generator for the web that automatically generated daily workout routines and automatically shared those to instagram on a page with 75k+ followers",
     startDate: new Date("March 2017"),
