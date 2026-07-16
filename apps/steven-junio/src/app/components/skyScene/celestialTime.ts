@@ -125,12 +125,16 @@ export function getCelestialState(now = new Date()): CelestialState {
   };
 }
 
-export function formatPortfolioTime(date: Date, includeSeconds = false) {
+export function formatPortfolioTime(
+  date: Date,
+  includeSeconds = false,
+  includeTimeZone = includeSeconds,
+) {
   return new Intl.DateTimeFormat("en-US", {
     timeZone: PORTFOLIO_LOCATION.timeZone,
     hour: "numeric",
     minute: "2-digit",
     second: includeSeconds ? "2-digit" : undefined,
-    timeZoneName: includeSeconds ? "short" : undefined,
+    timeZoneName: includeTimeZone ? "short" : undefined,
   }).format(date);
 }

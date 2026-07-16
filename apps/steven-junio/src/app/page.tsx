@@ -7,16 +7,16 @@ export default function Home() {
     <>
       <main className="">
         {/* Parent div with relative positioning */}
-        <div className="relative  flex flex-col items-center justify-center h-[calc(100vh)] w-screen">
+        <div className="relative flex h-screen min-h-svh w-full flex-col items-center justify-center overflow-hidden h-dvh">
           {/* TimeOfDayScene with absolute positioning */}
           <div className="absolute top-0 right-0 bottom-0 left-0 z-0">
             <TimeOfDayScene />
           </div>
 
           {/* Hero content with higher z-index */}
-          <div className="z-10 px-6 items-center flex flex-col">
-            <h1 className="w-fit text-5xl font-sans inset-0 bg-black bg-opacity-30 backdrop-blur-sm rounded p-3 text-white tracking-wide ">{`Hello, I'm Steven`}</h1>
-            <h2 className="w-fit text-2xl bg-black bg-opacity-30 p-3 rounded text-white mt-3">
+          <div className="z-10 flex -translate-y-20 flex-col items-center px-6 sm:translate-y-0">
+            <h1 className="inset-0 w-fit rounded bg-black bg-opacity-30 p-3 text-center font-sans text-4xl tracking-wide text-white backdrop-blur-sm sm:text-5xl">{`Hello, I'm Steven`}</h1>
+            <h2 className="mt-3 w-fit rounded bg-black bg-opacity-30 p-3 text-xl text-white sm:text-2xl">
               Software developer
             </h2>
             {/* Buttons container */}
@@ -30,7 +30,7 @@ export default function Home() {
               </Button>
             </div>
           </div>
-          <div className="absolute bottom-4 w-full flex justify-center space-x-6">
+          <div className="absolute bottom-[calc(1rem+env(safe-area-inset-bottom))] flex w-full justify-center space-x-6">
             <Link
               href="https://github.com/stevenjunio"
               target="_blank"
