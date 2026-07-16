@@ -1,4 +1,4 @@
-import { getTimes } from "suncalc";
+import { getPosition, getTimes } from "suncalc";
 
 export const PORTFOLIO_LOCATION = {
   city: "San Jose, CA",
@@ -25,6 +25,7 @@ const ARC_WIDTH = 36;
 const HORIZON_HEIGHT = -8;
 const ARC_HEIGHT = 19;
 const SCENE_DEPTH = -20;
+const SKY_SUN_DISTANCE = 100;
 
 function clamp(value: number, minimum = 0, maximum = 1) {
   return Math.min(maximum, Math.max(minimum, value));
@@ -70,14 +71,21 @@ function getArcPosition(progress: number): [number, number, number] {
   ];
 }
 
-function getBelowHorizonSunPosition(progress: number): [number, number, number] {
-  const normalizedProgress = clamp(progress);
-  const angle = Math.PI * normalizedProgress;
+export function getSkySunPosition(date: Date): [number, number, number] {
+  const { altitude, azimuth } = getPosition(
+    date,
+    PORTFOLIO_LOCATION.latitude,
+    PORTFOLIO_LOCATION.longitude,
+  );
+  const altitudeRadians = (altitude * Math.PI) / 180;
+  const azimuthRadians = (azimuth * Math.PI) / 180;
+  const horizontalDistance =
+    Math.cos(altitudeRadians) * SKY_SUN_DISTANCE;
 
   return [
-    ARC_WIDTH / 2 - ARC_WIDTH * normalizedProgress,
-    -HORIZON_HEIGHT - Math.sin(angle) * ARC_HEIGHT,
-    SCENE_DEPTH,
+    Math.sin(azimuthRadians) * horizontalDistance,
+    Math.sin(altitudeRadians) * SKY_SUN_DISTANCE,
+    -Math.cos(azimuthRadians) * horizontalDistance,
   ];
 }
 
@@ -98,7 +106,7 @@ export function getCelestialState(now = new Date()): CelestialState {
     return {
       body: "sun",
       bodyPosition: position,
-      skySunPosition: position,
+      skySunPosition: getSkySunPosition(now),
       sunrise: today.sunrise,
       sunset: today.sunset,
       nextTransition: today.sunset,
@@ -115,7 +123,7 @@ export function getCelestialState(now = new Date()): CelestialState {
   return {
     body: "moon",
     bodyPosition: getArcPosition(nightProgress),
-    skySunPosition: getBelowHorizonSunPosition(nightProgress),
+    skySunPosition: getSkySunPosition(now),
     sunrise: now < today.sunrise ? today.sunrise : tomorrow.sunrise,
     sunset: today.sunset,
     nextTransition: nightEnds,
