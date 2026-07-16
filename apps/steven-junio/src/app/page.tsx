@@ -58,8 +58,8 @@ export default function Home() {
             className="z-10 flex -translate-y-20 flex-col items-center px-6 sm:translate-y-0"
           >
             <h1 className="inset-0 w-fit rounded bg-black bg-opacity-30 p-3 text-center font-sans text-4xl tracking-wide text-white backdrop-blur-sm sm:text-5xl">{`Hello, I'm Steven`}</h1>
-            <h2 className="mt-3 w-fit rounded bg-black bg-opacity-30 p-3 text-xl text-white sm:text-2xl">
-              Software developer
+            <h2 className="mt-3 w-fit whitespace-nowrap rounded bg-black bg-opacity-30 p-3 text-center text-lg text-white sm:text-2xl">
+              I build software from idea to launch.
             </h2>
             {/* Buttons container */}
             <div className="flex space-x-4 mt-4 justify-center">

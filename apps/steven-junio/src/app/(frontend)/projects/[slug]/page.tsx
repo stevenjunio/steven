@@ -97,8 +97,9 @@ export default async function ProjectPage({ params }: Props) {
             ) : (
               <video
                 controls
-                autoPlay
                 playsInline
+                preload="none"
+                aria-label={`${project.title} project video`}
                 className="w-full max-h-[500px] rounded-lg"
               >
                 <source src={project.video} type="video/mp4" />
