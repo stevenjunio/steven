@@ -14,7 +14,10 @@ export default function Home() {
           </div>
 
           {/* Hero content with higher z-index */}
-          <div className="z-10 flex -translate-y-20 flex-col items-center px-6 sm:translate-y-0">
+          <div
+            data-portfolio-hero
+            className="z-10 flex -translate-y-20 flex-col items-center px-6 sm:translate-y-0"
+          >
             <h1 className="inset-0 w-fit rounded bg-black bg-opacity-30 p-3 text-center font-sans text-4xl tracking-wide text-white backdrop-blur-sm sm:text-5xl">{`Hello, I'm Steven`}</h1>
             <h2 className="mt-3 w-fit rounded bg-black bg-opacity-30 p-3 text-xl text-white sm:text-2xl">
               Software developer
