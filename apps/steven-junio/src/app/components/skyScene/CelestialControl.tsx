@@ -6,9 +6,11 @@ import {
   PORTFOLIO_LOCATION,
   type CelestialState,
 } from "./celestialTime";
+import type { WeatherSnapshot } from "./weather";
 
 type CelestialControlProps = {
   celestial: CelestialState;
+  weather: WeatherSnapshot;
 };
 
 type LabelPlacement =
@@ -42,7 +44,10 @@ function placementsMatch(
   return false;
 }
 
-export default function CelestialControl({ celestial }: CelestialControlProps) {
+export default function CelestialControl({
+  celestial,
+  weather,
+}: CelestialControlProps) {
   const [currentTime, setCurrentTime] = useState(() => new Date());
   const [labelPlacement, setLabelPlacement] =
     useState<LabelPlacement | null>(null);
@@ -180,7 +185,7 @@ export default function CelestialControl({ celestial }: CelestialControlProps) {
       <div
         ref={labelRef}
         role="status"
-        aria-label={`Steven's home time is ${formatPortfolioTime(currentTime, false, true)} in ${PORTFOLIO_LOCATION.city}`}
+        aria-label={`Steven's home time is ${formatPortfolioTime(currentTime, false, true)} in ${PORTFOLIO_LOCATION.city}. Current conditions: ${weather.condition}.`}
         style={attachedStyle}
         className={`pointer-events-none fixed z-20 whitespace-nowrap rounded-full border border-white/10 bg-slate-950/45 px-2.5 py-1 text-[11px] font-medium tracking-wide text-white/80 shadow-sm backdrop-blur-md transition-opacity sm:text-xs ${
           labelPlacement
@@ -196,6 +201,9 @@ export default function CelestialControl({ celestial }: CelestialControlProps) {
         <span className="tabular-nums">
           {formatPortfolioTime(currentTime, false, true)}
         </span>
+        {!weather.isFallback && (
+          <span className="hidden sm:inline"> · {weather.condition}</span>
+        )}
       </div>
     </>
   );

@@ -4,12 +4,14 @@ import { OrbitControls, Sky, Stars } from "@react-three/drei";
 import { Suspense, useMemo } from "react";
 import { Vector3 } from "three";
 import type { CelestialState } from "./celestialTime";
+import type { WeatherVisualState } from "./weather";
 
 type SceneProps = {
   celestial: CelestialState;
+  weather: WeatherVisualState;
 };
 
-export default function Scene({ celestial }: SceneProps) {
+export default function Scene({ celestial, weather }: SceneProps) {
   const skySunPosition = useMemo(
     () => new Vector3(...celestial.skySunPosition),
     [celestial.skySunPosition],
@@ -20,8 +22,10 @@ export default function Scene({ celestial }: SceneProps) {
   return (
     <Suspense fallback={null}>
       <Sky
-        turbidity={isNight ? 4 : 2}
-        rayleigh={isNight ? 0.25 : 1.4}
+        turbidity={weather.turbidity}
+        rayleigh={weather.rayleigh}
+        mieCoefficient={weather.mieCoefficient}
+        mieDirectionalG={weather.mieDirectionalG}
         sunPosition={skySunPosition}
         distance={35}
       />
