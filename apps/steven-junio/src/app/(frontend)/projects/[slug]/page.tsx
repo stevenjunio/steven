@@ -9,6 +9,7 @@ import {
   Button,
 } from "@radix-ui/themes";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { ExternalLink } from "lucide-react";
 import Image from "next/image";
 import { projects } from "../../../../../data/projects";
 import { Metadata } from "next";
@@ -66,6 +67,10 @@ export default async function ProjectPage({ params }: Props) {
   if (!project) {
     notFound();
   }
+  const liveUrl =
+    ("liveUrl" in project && project.liveUrl) ||
+    ("url" in project && project.url);
+
   return (
     <Box className="container mx-auto px-4 py-8">
       <Heading size="8" className="mb-6">
@@ -111,7 +116,18 @@ export default async function ProjectPage({ params }: Props) {
                 </Badge>
               ))}
             </Flex>
-            <Flex gap="4"></Flex>
+            {liveUrl && (
+              <Link
+                href={liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button style={{ cursor: "pointer" }}>
+                  <ExternalLink size={16} />
+                  Visit website
+                </Button>
+              </Link>
+            )}
           </Flex>
         </Card>
 
