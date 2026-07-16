@@ -11,9 +11,41 @@ type CelestialControlProps = {
   celestial: CelestialState;
 };
 
+type LabelPlacement =
+  | {
+      mode: "attached";
+      left: number;
+      top: number;
+    }
+  | {
+      mode: "corner";
+      side: "left" | "right";
+    };
+
+const VIEWPORT_MARGIN = 16;
+const CELESTIAL_LABEL_OVERLAP = 16;
+
+function placementsMatch(
+  current: LabelPlacement | null,
+  next: LabelPlacement,
+) {
+  if (!current || current.mode !== next.mode) return false;
+
+  if (current.mode === "corner" && next.mode === "corner") {
+    return current.side === next.side;
+  }
+
+  if (current.mode === "attached" && next.mode === "attached") {
+    return current.left === next.left && current.top === next.top;
+  }
+
+  return false;
+}
+
 export default function CelestialControl({ celestial }: CelestialControlProps) {
   const [currentTime, setCurrentTime] = useState(() => new Date());
-  const [useCornerLabel, setUseCornerLabel] = useState(false);
+  const [labelPlacement, setLabelPlacement] =
+    useState<LabelPlacement | null>(null);
   const celestialRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLDivElement>(null);
 
@@ -33,12 +65,6 @@ export default function CelestialControl({ celestial }: CelestialControlProps) {
   }, [celestial.arcProgress]);
 
   const isMoon = celestial.body === "moon";
-  const labelAlignment =
-    celestial.arcProgress > 0.72
-      ? "right-0"
-      : celestial.arcProgress < 0.28
-        ? "left-0"
-        : "left-1/2 -translate-x-1/2";
 
   useLayoutEffect(() => {
     const celestialElement = celestialRef.current;
@@ -56,60 +82,75 @@ export default function CelestialControl({ celestial }: CelestialControlProps) {
       const labelWidth = labelRect.width;
       const labelHeight = labelRect.height;
 
-      let labelLeft = celestialRect.left;
-
-      if (celestial.arcProgress > 0.72) {
-        labelLeft = celestialRect.right - labelWidth;
-      } else if (celestial.arcProgress >= 0.28) {
-        labelLeft = celestialRect.left + (celestialRect.width - labelWidth) / 2;
-      }
+      const idealLeft =
+        celestialRect.left + (celestialRect.width - labelWidth) / 2;
+      const maximumLeft = Math.max(
+        VIEWPORT_MARGIN,
+        window.innerWidth - labelWidth - VIEWPORT_MARGIN,
+      );
+      const labelLeft = Math.min(
+        maximumLeft,
+        Math.max(VIEWPORT_MARGIN, idealLeft),
+      );
+      const labelTop =
+        celestialRect.top - labelHeight + CELESTIAL_LABEL_OVERLAP;
 
       const candidate = {
         left: labelLeft,
         right: labelLeft + labelWidth,
-        top: celestialRect.bottom + 12,
-        bottom: celestialRect.bottom + 12 + labelHeight,
+        top: labelTop,
+        bottom: labelTop + labelHeight,
       };
-      const collisionPadding = 8;
       const overlapsHero =
-        candidate.right > heroRect.left - collisionPadding &&
-        candidate.left < heroRect.right + collisionPadding &&
-        candidate.bottom > heroRect.top - collisionPadding &&
-        candidate.top < heroRect.bottom + collisionPadding;
-      const leavesViewport =
-        candidate.left < 16 || candidate.right > window.innerWidth - 16;
+        candidate.right > heroRect.left &&
+        candidate.left < heroRect.right &&
+        candidate.bottom > heroRect.top &&
+        candidate.top < heroRect.bottom;
+      const lacksVerticalRoom = candidate.top < VIEWPORT_MARGIN;
 
-      setUseCornerLabel(overlapsHero || leavesViewport);
+      const nextPlacement: LabelPlacement =
+        overlapsHero || lacksVerticalRoom
+          ? {
+              mode: "corner",
+              side: celestialRect.left < window.innerWidth / 2 ? "left" : "right",
+            }
+          : {
+              mode: "attached",
+              left: Math.round(labelLeft),
+              top: Math.round(labelTop),
+            };
+
+      setLabelPlacement((current) =>
+        placementsMatch(current, nextPlacement) ? current : nextPlacement,
+      );
     };
 
     updatePlacement();
 
     const resizeObserver = new ResizeObserver(updatePlacement);
+    resizeObserver.observe(celestialElement);
     resizeObserver.observe(heroElement);
     resizeObserver.observe(labelElement);
     window.addEventListener("resize", updatePlacement);
+    window.visualViewport?.addEventListener("resize", updatePlacement);
 
     return () => {
       resizeObserver.disconnect();
       window.removeEventListener("resize", updatePlacement);
+      window.visualViewport?.removeEventListener("resize", updatePlacement);
     };
-  }, [celestial.arcProgress, currentTime, useCornerLabel]);
+  }, [celestial.arcProgress, currentTime]);
 
-  const cornerAlignment = celestial.arcProgress < 0.5 ? "left-4" : "right-4";
-  const timeLabel = (
-    <div
-      ref={labelRef}
-      role="status"
-      aria-label={`Steven's home time is ${formatPortfolioTime(currentTime, false, true)} in ${PORTFOLIO_LOCATION.city}`}
-      className={`pointer-events-none z-20 whitespace-nowrap rounded-full bg-slate-950/35 px-2.5 py-1 text-[11px] font-medium tracking-wide text-white/75 shadow-sm backdrop-blur-sm sm:text-xs ${
-        useCornerLabel
-          ? `fixed top-[calc(1rem+env(safe-area-inset-top))] ${cornerAlignment}`
-          : `absolute top-[calc(100%+0.75rem)] ${labelAlignment}`
-      }`}
-    >
-      {PORTFOLIO_LOCATION.city} · {formatPortfolioTime(currentTime, false, true)}
-    </div>
-  );
+  const isCornerLabel = labelPlacement?.mode === "corner";
+  const cornerAlignment =
+    isCornerLabel && labelPlacement.side === "right" ? "right-4" : "left-4";
+  const attachedStyle =
+    labelPlacement?.mode === "attached"
+      ? {
+          left: labelPlacement.left,
+          top: labelPlacement.top,
+        }
+      : undefined;
 
   return (
     <>
@@ -134,11 +175,28 @@ export default function CelestialControl({ celestial }: CelestialControlProps) {
             </>
           )}
         </div>
-
-        {!useCornerLabel && timeLabel}
       </div>
 
-      {useCornerLabel && timeLabel}
+      <div
+        ref={labelRef}
+        role="status"
+        aria-label={`Steven's home time is ${formatPortfolioTime(currentTime, false, true)} in ${PORTFOLIO_LOCATION.city}`}
+        style={attachedStyle}
+        className={`pointer-events-none fixed z-20 whitespace-nowrap rounded-full border border-white/10 bg-slate-950/45 px-2.5 py-1 text-[11px] font-medium tracking-wide text-white/80 shadow-sm backdrop-blur-md transition-opacity sm:text-xs ${
+          labelPlacement
+            ? "opacity-100"
+            : "left-0 top-0 opacity-0"
+        } ${
+          isCornerLabel
+            ? `top-[calc(1rem+env(safe-area-inset-top))] ${cornerAlignment}`
+            : ""
+        }`}
+      >
+        {PORTFOLIO_LOCATION.city} ·{" "}
+        <span className="tabular-nums">
+          {formatPortfolioTime(currentTime, false, true)}
+        </span>
+      </div>
     </>
   );
 }

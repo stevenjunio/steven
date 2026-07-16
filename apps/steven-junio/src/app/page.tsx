@@ -2,6 +2,45 @@ import { Button } from "@/components/ui/button";
 import TimeOfDayScene from "./components/TimeOfDayScene";
 import Link from "next/link";
 
+const professionalLinks = [
+  {
+    label: "GitHub",
+    href: "https://github.com/stevenjunio",
+    icon: (
+      <svg aria-hidden="true" viewBox="0 0 24 24" className="size-4 fill-current">
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.79-.26.79-.58v-2.23c-3.34.72-4.03-1.42-4.03-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.21.09 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49 1 .11-.78.42-1.31.76-1.61-2.66-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.8c1.02 0 2.05.14 3.01.4 2.29-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.62-5.48 5.92.43.37.81 1.1.81 2.22v3.3c0 .32.19.69.8.58A12 12 0 0 0 12 0Z" />
+      </svg>
+    ),
+  },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/stevenjunio",
+    icon: (
+      <svg aria-hidden="true" viewBox="0 0 24 24" className="size-4 fill-current">
+        <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V8.98h3.42v1.57h.05a3.75 3.75 0 0 1 3.38-1.86c3.61 0 4.28 2.38 4.28 5.47v6.29ZM5.32 7.41a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13Zm1.78 13.04H3.54V8.98H7.1v11.47ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z" />
+      </svg>
+    ),
+  },
+  {
+    label: "Résumé",
+    href: "https://docs.google.com/document/d/1e0e0JipJCtlAUycl0ip2qKepGNW-EITz/edit?usp=sharing&ouid=116200925914091731929&rtpof=true&sd=true",
+    icon: (
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        className="size-4 fill-none stroke-current"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      >
+        <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+        <path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" />
+        <path d="M9 13h6M9 17h6" />
+      </svg>
+    ),
+  },
+] as const;
+
 export default function Home() {
   return (
     <>
@@ -33,74 +72,23 @@ export default function Home() {
               </Button>
             </div>
           </div>
-          <div className="absolute bottom-[calc(1rem+env(safe-area-inset-bottom))] flex w-full justify-center space-x-6">
-            <Link
-              href="https://github.com/stevenjunio"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Steven Junio on GitHub"
-            >
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                xmlns="http://www.w3.org/2000/svg"
-                x="0px"
-                y="0px"
-                width="50"
-                height="50"
-                viewBox="0 0 24 24"
+          <nav
+            aria-label="Professional links"
+            className="absolute bottom-[calc(1.5rem+env(safe-area-inset-bottom))] left-1/2 z-10 flex -translate-x-1/2 items-center gap-1 rounded-2xl border border-white/15 bg-slate-950/35 p-1.5 text-white/80 shadow-lg shadow-black/10 backdrop-blur-md"
+          >
+            {professionalLinks.map(({ label, href, icon }) => (
+              <Link
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex min-h-10 items-center gap-1.5 rounded-xl px-2.5 text-xs font-medium tracking-wide transition-colors hover:bg-white/15 hover:text-white focus-visible:bg-white/15 focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 sm:px-3 sm:text-sm"
               >
-                <path
-                  fill="#000"
-                  d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
-                />
-              </svg>
-            </Link>
-            <Link
-              href="https://www.linkedin.com/in/stevenjunio"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Steven Junio on LinkedIn"
-            >
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                xmlns="http://www.w3.org/2000/svg"
-                x="0px"
-                y="0px"
-                width="50"
-                height="50"
-                viewBox="0 0 50 50"
-              >
-                <path d="M41,4H9C6.24,4,4,6.24,4,9v32c0,2.76,2.24,5,5,5h32c2.76,0,5-2.24,5-5V9C46,6.24,43.76,4,41,4z M17,20v19h-6V20H17z M11,14.47c0-1.4,1.2-2.47,3-2.47s2.93,1.07,3,2.47c0,1.4-1.12,2.53-3,2.53C12.2,17,11,15.87,11,14.47z M39,39h-6c0,0,0-9.26,0-10 c0-2-1-4-3.5-4.04h-0.08C27,24.96,26,27.02,26,29c0,0.91,0,10,0,10h-6V20h6v2.56c0,0,1.93-2.56,5.81-2.56 c3.97,0,7.19,2.73,7.19,8.26V39z"></path>
-              </svg>
-            </Link>
-            <Link
-              href="https://docs.google.com/document/d/1e0e0JipJCtlAUycl0ip2qKepGNW-EITz/edit?usp=sharing&ouid=116200925914091731929&rtpof=true&sd=true"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="View Steven Junio's résumé"
-            >
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#000"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                width="50"
-                height="50"
-                strokeWidth="2"
-              >
-                <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
-                <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
-                <path d="M9 17h6"></path>
-                <path d="M9 13h6"></path>
-              </svg>
-            </Link>
-          </div>
+                {icon}
+                <span>{label}</span>
+              </Link>
+            ))}
+          </nav>
         </div>
       </main>
     </>
