@@ -1,3 +1,5 @@
+BEGIN;
+
 CREATE TYPE "AgentScope" AS ENUM ('PUBLIC', 'PRIVATE', 'NEVER_PUBLISH');
 CREATE TYPE "KnowledgeRevisionStatus" AS ENUM ('DRAFT', 'READY', 'ARCHIVED');
 CREATE TYPE "KnowledgeReleaseStatus" AS ENUM ('DRAFT', 'PUBLISHED', 'RETIRED');
@@ -218,3 +220,5 @@ ALTER TABLE "KnowledgeChunk" ADD CONSTRAINT "KnowledgeChunk_tokenCount_check" CH
 ALTER TABLE "AgentRun" ADD CONSTRAINT "AgentRun_costs_check" CHECK ("estimatedCostMicros" >= 0 AND ("actualCostMicros" IS NULL OR "actualCostMicros" >= 0));
 ALTER TABLE "UsageBucket" ADD CONSTRAINT "UsageBucket_nonnegative_check" CHECK ("requestCount" >= 0 AND "reservedMicros" >= 0 AND "spentMicros" >= 0 AND "activeCount" >= 0);
 ALTER TABLE "UsageLedger" ADD CONSTRAINT "UsageLedger_nonnegative_check" CHECK ("costMicros" >= 0 AND "inputTokens" >= 0 AND "outputTokens" >= 0);
+
+COMMIT;

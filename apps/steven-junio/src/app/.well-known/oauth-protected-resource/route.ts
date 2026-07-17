@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
+import { getAuth0Domain } from "@/lib/auth0";
 
 export function GET(request: Request) {
   const origin = new URL(request.url).origin;
-  const domain = process.env.AUTH0_DOMAIN?.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  const domain = getAuth0Domain();
   return NextResponse.json({
     resource: `${origin}/mcp`,
     authorization_servers: domain ? [`https://${domain}/`] : [],

@@ -1,9 +1,10 @@
 import { createRemoteJWKSet, jwtVerify } from "jose";
+import { getAuth0Domain } from "@/lib/auth0";
 
 export async function authorizeMcp(request: Request, requiredScope: string) {
   const authorization = request.headers.get("authorization");
   const token = authorization?.match(/^Bearer\s+(.+)$/i)?.[1];
-  const domain = process.env.AUTH0_DOMAIN;
+  const domain = getAuth0Domain();
   const audience = process.env.AUTH0_MCP_AUDIENCE;
   if (!token || !domain || !audience) return null;
 

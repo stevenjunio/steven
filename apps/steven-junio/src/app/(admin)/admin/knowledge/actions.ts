@@ -106,10 +106,10 @@ export async function savePersonaAction(formData: FormData) {
   const instructions = required(formData, "instructions");
   const prisma = getPrisma();
   const latest = await prisma.personaVersion.findFirst({ where: { scope }, orderBy: { version: "desc" } });
-  const persona = await prisma.$transaction(async (tx) => {
-    await tx.personaVersion.updateMany({ where: { scope, active: true }, data: { active: false } });
-    return tx.personaVersion.create({ data: { scope, version: (latest?.version ?? 0) + 1, instructions, active: true, activatedAt: new Date() } });
-  });
+  const [, persona] = await prisma.$transaction([
+    prisma.personaVersion.updateMany({ where: { scope, active: true }, data: { active: false } }),
+    prisma.personaVersion.create({ data: { scope, version: (latest?.version ?? 0) + 1, instructions, active: true, activatedAt: new Date() } }),
+  ]);
   await prisma.auditEvent.create({ data: { actorSub, action: "persona.activated", entityType: "PersonaVersion", entityId: persona.id, scope } });
   revalidatePath("/admin/knowledge");
 }

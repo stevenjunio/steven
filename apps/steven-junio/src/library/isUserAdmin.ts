@@ -12,10 +12,10 @@ export async function getAdminSubject() {
       .map((subject) => subject.trim())
       .filter(Boolean),
   );
+  const subject = session?.user?.sub;
 
-  return session?.user?.sub && adminSubjects.has(session.user.sub)
-    ? session.user.sub
-    : null;
+  if (!subject) return null;
+  return adminSubjects.has(subject) ? subject : null;
 }
 
 export default async function isUserAdmin() {

@@ -42,46 +42,66 @@ export async function createKnowledgeRevision(input: {
   const prisma = getPrisma();
   const chunks = chunkKnowledge(input.content);
   const embeddings = await createEmbeddings(chunks);
+  const chunkCreates = chunks.map((content, ordinal) => ({
+    ordinal,
+    content,
+    tokenCount: Math.ceil(content.length / 4),
+    embedding: embeddings[ordinal] ?? undefined,
+  } satisfies Prisma.KnowledgeChunkUncheckedCreateWithoutRevisionInput));
 
-  return prisma.$transaction(async (tx) => {
-    const source = input.sourceId
-      ? await tx.knowledgeSource.findUniqueOrThrow({ where: { id: input.sourceId } })
-      : await tx.knowledgeSource.create({
-          data: {
-            name: input.name,
-            kind: input.kind,
-            scope: input.scope,
-            sourceUrl: input.sourceUrl,
-            modelAccess: input.modelAccess ?? true,
-          },
-        });
-    if (source.scope !== input.scope) throw new Error("A revision cannot change knowledge scope.");
-
-    const latest = await tx.knowledgeRevision.findFirst({
-      where: { sourceId: source.id },
-      orderBy: { version: "desc" },
-      select: { version: true },
-    });
-    return tx.knowledgeRevision.create({
+  if (!input.sourceId) {
+    const source = await prisma.knowledgeSource.create({
       data: {
-        sourceId: source.id,
+        name: input.name,
+        kind: input.kind,
         scope: input.scope,
-        version: (latest?.version ?? 0) + 1,
-        content: input.content,
-        checksum: checksum(input.content),
-        status: "READY",
-        chunks: {
-          create: chunks.map((content, ordinal) => ({
-            scope: input.scope,
-            ordinal,
-            content,
-            tokenCount: Math.ceil(content.length / 4),
-            embedding: embeddings[ordinal] ?? undefined,
-          })),
+        sourceUrl: input.sourceUrl,
+        modelAccess: input.modelAccess ?? true,
+        revisions: {
+          create: {
+            version: 1,
+            content: input.content,
+            checksum: checksum(input.content),
+            status: "READY",
+            chunks: { create: chunkCreates },
+          },
         },
       },
-      include: { source: true, chunks: true },
+      include: {
+        revisions: {
+          include: { source: true, chunks: true },
+        },
+      },
     });
+    return source.revisions[0];
+  }
+
+  const source = await prisma.knowledgeSource.findUniqueOrThrow({
+    where: { id: input.sourceId },
+  });
+  if (source.scope !== input.scope) {
+    throw new Error("A revision cannot change knowledge scope.");
+  }
+  const latest = await prisma.knowledgeRevision.findFirst({
+    where: { sourceId: source.id },
+    orderBy: { version: "desc" },
+    select: { version: true },
+  });
+
+  return prisma.knowledgeRevision.create({
+    data: {
+      version: (latest?.version ?? 0) + 1,
+      content: input.content,
+      checksum: checksum(input.content),
+      status: "READY",
+      source: {
+        connect: {
+          id_scope: { id: source.id, scope: source.scope },
+        },
+      },
+      chunks: { create: chunkCreates },
+    },
+    include: { source: true, chunks: true },
   });
 }
 
@@ -162,18 +182,19 @@ export async function publishPublicRelease(name: string) {
   });
   if (chunks.length === 0) throw new Error("There is no ready public knowledge to publish.");
 
-  return prisma.$transaction(async (tx) => {
-    await tx.knowledgeRelease.updateMany({
+  const [, release] = await prisma.$transaction([
+    prisma.knowledgeRelease.updateMany({
       where: { status: "PUBLISHED" },
       data: { status: "RETIRED", retiredAt: new Date() },
-    });
-    return tx.knowledgeRelease.create({
+    }),
+    prisma.knowledgeRelease.create({
       data: {
         name,
         status: "PUBLISHED",
         publishedAt: new Date(),
         items: { create: chunks.map(({ id }) => ({ chunkId: id })) },
       },
-    });
-  });
+    }),
+  ]);
+  return release;
 }
