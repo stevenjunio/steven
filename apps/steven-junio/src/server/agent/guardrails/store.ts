@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { getPrisma } from "@/library/prisma";
 import type { Prisma } from "@/generated/prisma/client";
-import { PRIVATE_GUARDRAIL_LIMITS, PUBLIC_GUARDRAIL_LIMITS } from "./limits.ts";
+import { META_PROVIDER_GUARDRAIL_LIMITS, PRIVATE_GUARDRAIL_LIMITS, PUBLIC_GUARDRAIL_LIMITS } from "./limits.ts";
 
 class AdmissionError extends Error {
   constructor(public readonly code: "minute_limit" | "day_limit" | "concurrency_limit" | "daily_budget" | "monthly_budget") {
@@ -86,23 +86,14 @@ export async function reservePublicRequest(input: {
             },
             update: {},
           });
-          const globalMonth = await tx.usageBucket.upsert({
-            where: {
-              scope_key_window_periodStart: {
-                scope: "PUBLIC",
-                key: "global",
-                window: "MONTH",
-                periodStart: window.month.start,
-              },
-            },
-            create: {
-              key: "global",
-              scope: "PUBLIC",
-              window: "MONTH",
-              periodStart: window.month.start,
-              periodEnd: window.month.end,
-            },
+          const providerMonthBucket = await tx.usageBucket.upsert({
+            where: { scope_key_window_periodStart: { scope: "PUBLIC", key: "provider:meta", window: "MONTH", periodStart: window.month.start } },
+            create: { scope: "PUBLIC", key: "provider:meta", window: "MONTH", periodStart: window.month.start, periodEnd: window.month.end },
             update: {},
+          });
+          const legacyMonth = await tx.usageBucket.aggregate({
+            where: { key: "global", window: "MONTH", periodStart: window.month.start },
+            _sum: { spentMicros: true, reservedMicros: true },
           });
 
           if (visitorBuckets.some(({ minute }) => minute.requestCount >= PUBLIC_GUARDRAIL_LIMITS.requestsPerMinute)) throw new AdmissionError("minute_limit");
@@ -111,7 +102,14 @@ export async function reservePublicRequest(input: {
           if (globalDay.spentMicros + globalDay.reservedMicros + BigInt(input.estimateMicros) > BigInt(PUBLIC_GUARDRAIL_LIMITS.dailyBudgetMicros)) {
             throw new AdmissionError("daily_budget");
           }
-          if (globalMonth.spentMicros + globalMonth.reservedMicros + BigInt(input.estimateMicros) > BigInt(PUBLIC_GUARDRAIL_LIMITS.monthlyBudgetMicros)) {
+          if (
+            providerMonthBucket.spentMicros +
+              providerMonthBucket.reservedMicros +
+              (legacyMonth._sum.spentMicros ?? 0n) +
+              (legacyMonth._sum.reservedMicros ?? 0n) +
+              BigInt(input.estimateMicros) >
+            BigInt(META_PROVIDER_GUARDRAIL_LIMITS.monthlyBudgetMicros)
+          ) {
             throw new AdmissionError("monthly_budget");
           }
 
@@ -124,11 +122,11 @@ export async function reservePublicRequest(input: {
             data: { requestCount: { increment: 1 }, activeCount: { increment: 1 }, reservedMicros: { increment: input.estimateMicros } },
           });
           await tx.usageBucket.update({
-            where: { id: globalMonth.id },
+            where: { id: providerMonthBucket.id },
             data: { requestCount: { increment: 1 }, reservedMicros: { increment: input.estimateMicros } },
           });
           await tx.usageLedger.createMany({
-            data: [globalDay, globalMonth].map((bucket) => ({
+            data: [globalDay, providerMonthBucket].map((bucket) => ({
               id: randomUUID(),
               bucketId: bucket.id,
               runId: input.runId,
@@ -167,21 +165,32 @@ export async function reservePrivateRequest(input: {
             create: { scope: "PRIVATE", key: `owner:${input.ownerSub}`, window: "DAY", periodStart: window.day.start, periodEnd: window.day.end },
             update: {},
           });
-          const month = await tx.usageBucket.upsert({
-            where: { scope_key_window_periodStart: { scope: "PRIVATE", key: "global", window: "MONTH", periodStart: window.month.start } },
-            create: { scope: "PRIVATE", key: "global", window: "MONTH", periodStart: window.month.start, periodEnd: window.month.end },
+          const providerMonthBucket = await tx.usageBucket.upsert({
+            where: { scope_key_window_periodStart: { scope: "PUBLIC", key: "provider:meta", window: "MONTH", periodStart: window.month.start } },
+            create: { scope: "PUBLIC", key: "provider:meta", window: "MONTH", periodStart: window.month.start, periodEnd: window.month.end },
             update: {},
+          });
+          const legacyMonth = await tx.usageBucket.aggregate({
+            where: { key: "global", window: "MONTH", periodStart: window.month.start },
+            _sum: { spentMicros: true, reservedMicros: true },
           });
           const existing = await tx.usageLedger.findFirst({ where: { requestId: input.requestId, kind: "RESERVE" } });
           if (existing) return { status: "reserved" as const };
           if (ownerDay.requestCount >= PRIVATE_GUARDRAIL_LIMITS.requestsPerDay) throw new AdmissionError("day_limit");
-          if (month.spentMicros + month.reservedMicros + BigInt(input.estimateMicros) > BigInt(PRIVATE_GUARDRAIL_LIMITS.monthlyBudgetMicros)) {
+          if (
+            providerMonthBucket.spentMicros +
+              providerMonthBucket.reservedMicros +
+              (legacyMonth._sum.spentMicros ?? 0n) +
+              (legacyMonth._sum.reservedMicros ?? 0n) +
+              BigInt(input.estimateMicros) >
+            BigInt(META_PROVIDER_GUARDRAIL_LIMITS.monthlyBudgetMicros)
+          ) {
             throw new AdmissionError("monthly_budget");
           }
           await tx.usageBucket.update({ where: { id: ownerDay.id }, data: { requestCount: { increment: 1 } } });
-          await tx.usageBucket.update({ where: { id: month.id }, data: { requestCount: { increment: 1 }, reservedMicros: { increment: input.estimateMicros } } });
+          await tx.usageBucket.update({ where: { id: providerMonthBucket.id }, data: { requestCount: { increment: 1 }, reservedMicros: { increment: input.estimateMicros } } });
           await tx.usageLedger.create({
-            data: { bucketId: month.id, runId: input.runId, requestId: input.requestId, kind: "RESERVE", costMicros: input.estimateMicros },
+            data: { bucketId: providerMonthBucket.id, runId: input.runId, requestId: input.requestId, kind: "RESERVE", costMicros: input.estimateMicros },
           });
           return { status: "reserved" as const };
         },

@@ -10,7 +10,7 @@ Steven Agent is a source-grounded AI representation of Steven. It uses Muse Spar
 - Public chat and its API stay unavailable unless `STEVEN_AGENT_PUBLIC_MODEL_ENABLED=true`.
 - Every generated factual answer must contain a valid retrieved-source citation. Answers without one become an abstention.
 - Muse receives no tools or web-search capability.
-- Public calls reserve their maximum estimated cost before generation. Defaults are $0.50/day, $5/month, 10 questions per visitor/day, five/minute, and three concurrent requests.
+- All Meta calls reserve their maximum estimated cost against one shared $5/month provider budget before generation. Public defaults additionally enforce $0.50/day, 10 questions per visitor/day, five/minute, and three concurrent requests.
 - Conversations persist until the visitor or owner deletes them. Raw IP addresses and raw session IDs are never stored.
 
 ## Setup
@@ -54,6 +54,6 @@ Register `https://www.stevenjunio.com/auth/callback` as an Auth0 Allowed Callbac
 
 - Monitor `AgentRun` for latency, errors, actual token usage, and cost.
 - Monitor `UsageBucket` and `UsageLedger` for reserved versus committed spend.
-- Use the public budget as the primary circuit breaker; Meta rate limits are not a dollar cap.
+- Use the shared Meta provider budget as the primary circuit breaker; Meta rate limits and its dashboard email alert are not dollar cutoffs.
 - Set `META_MODEL_API_KEY` to an invalid/empty value to disable all model calls immediately.
 - Retire a public release or turn off a source's `modelAccess` to remove knowledge from future retrieval.
