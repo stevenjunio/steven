@@ -7,6 +7,7 @@ test("morning sky uses the real above-horizon sun position", () => {
   const state = getCelestialState(morning);
 
   assert.equal(state.body, "sun");
+  assert.equal(state.phase, "day");
   assert.ok(
     state.bodyPosition[1] < 0,
     "the decorative arc should preserve its existing visual placement",
@@ -15,6 +16,20 @@ test("morning sky uses the real above-horizon sun position", () => {
     state.skySunPosition[1] > 25,
     "the sky shader sun should be well above the horizon",
   );
+});
+
+test("moves through dawn, golden hour, day, dusk, and night", () => {
+  const states = [
+    ["2026-07-16T05:30:00-07:00", "dawn"],
+    ["2026-07-16T06:30:00-07:00", "golden-hour"],
+    ["2026-07-16T13:00:00-07:00", "day"],
+    ["2026-07-16T20:30:00-07:00", "dusk"],
+    ["2026-07-16T23:30:00-07:00", "night"],
+  ] as const;
+
+  for (const [time, expectedPhase] of states) {
+    assert.equal(getCelestialState(new Date(time)).phase, expectedPhase);
+  }
 });
 
 test("real sky sun position crosses the horizon around sunrise and sunset", () => {

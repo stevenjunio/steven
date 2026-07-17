@@ -5,8 +5,8 @@ import {
   type NwsGridData,
   type NwsObservation,
 } from "../../components/skyScene/weather";
+import { PORTFOLIO_COORDINATES } from "../../components/skyScene/location";
 
-const LOCATION = "37.3382,-121.8863";
 const NWS_HEADERS = {
   Accept: "application/geo+json",
   "User-Agent":
@@ -49,7 +49,7 @@ async function fetchNwsJson<T>(
 export async function GET() {
   try {
     const point = await fetchNwsJson<NwsFeature<NwsPointMetadata>>(
-      `https://api.weather.gov/points/${LOCATION}`,
+      `https://api.weather.gov/points/${PORTFOLIO_COORDINATES}`,
       86_400,
     );
     const forecastGridData = point.properties?.forecastGridData;

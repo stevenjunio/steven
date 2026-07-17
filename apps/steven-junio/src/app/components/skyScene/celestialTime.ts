@@ -1,18 +1,17 @@
 import { getPosition, getTimes } from "suncalc";
+import { PORTFOLIO_LOCATION } from "./location.ts";
 
-export const PORTFOLIO_LOCATION = {
-  city: "San Jose, CA",
-  latitude: 37.3382,
-  longitude: -121.8863,
-  timeZone: "America/Los_Angeles",
-} as const;
+export { PORTFOLIO_LOCATION } from "./location.ts";
 
 export type CelestialBody = "sun" | "moon";
+export type SkyPhase = "night" | "dawn" | "golden-hour" | "day" | "dusk";
 
 export type CelestialState = {
   body: CelestialBody;
+  phase: SkyPhase;
   bodyPosition: [number, number, number];
   skySunPosition: [number, number, number];
+  solarAltitude: number;
   sunrise: Date;
   sunset: Date;
   nextTransition: Date;
@@ -98,15 +97,23 @@ export function getCelestialState(now = new Date()): CelestialState {
   const today = getSolarTimes(now);
   const tomorrow = getSolarTimes(now, 1);
   const isDaylight = now >= today.sunrise && now < today.sunset;
+  const solarAltitude = getPosition(
+    now,
+    PORTFOLIO_LOCATION.latitude,
+    PORTFOLIO_LOCATION.longitude,
+  ).altitude;
 
   if (isDaylight) {
     const daylightProgress = progressBetween(now, today.sunrise, today.sunset);
     const position = getArcPosition(daylightProgress);
+    const phase: SkyPhase = solarAltitude < 10 ? "golden-hour" : "day";
 
     return {
       body: "sun",
+      phase,
       bodyPosition: position,
       skySunPosition: getSkySunPosition(now),
+      solarAltitude,
       sunrise: today.sunrise,
       sunset: today.sunset,
       nextTransition: today.sunset,
@@ -119,11 +126,19 @@ export function getCelestialState(now = new Date()): CelestialState {
   const nightStarted = now < today.sunrise ? yesterday.sunset : today.sunset;
   const nightEnds = now < today.sunrise ? today.sunrise : tomorrow.sunrise;
   const nightProgress = progressBetween(now, nightStarted, nightEnds);
+  const phase: SkyPhase =
+    solarAltitude >= -12
+      ? now < today.sunrise
+        ? "dawn"
+        : "dusk"
+      : "night";
 
   return {
     body: "moon",
+    phase,
     bodyPosition: getArcPosition(nightProgress),
     skySunPosition: getSkySunPosition(now),
+    solarAltitude,
     sunrise: now < today.sunrise ? today.sunrise : tomorrow.sunrise,
     sunset: today.sunset,
     nextTransition: nightEnds,

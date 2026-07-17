@@ -1,23 +1,27 @@
 "use client";
 
-import { OrbitControls, Sky, Stars } from "@react-three/drei";
+import { Sky, Stars } from "@react-three/drei";
 import { Suspense, useMemo } from "react";
 import { Vector3 } from "three";
 import type { CelestialState } from "./celestialTime";
 import type { WeatherVisualState } from "./weather";
+import WeatherParticles from "./WeatherParticles";
 
 type SceneProps = {
   celestial: CelestialState;
   weather: WeatherVisualState;
+  reducedMotion: boolean;
 };
 
-export default function Scene({ celestial, weather }: SceneProps) {
+export default function Scene({
+  celestial,
+  weather,
+  reducedMotion,
+}: SceneProps) {
   const skySunPosition = useMemo(
     () => new Vector3(...celestial.skySunPosition),
     [celestial.skySunPosition],
   );
-
-  const isNight = celestial.body === "moon";
 
   return (
     <Suspense fallback={null}>
@@ -30,29 +34,24 @@ export default function Scene({ celestial, weather }: SceneProps) {
         distance={35}
       />
 
-      {isNight && (
+      {weather.starCount >= 16 && (
         <Stars
           radius={80}
           depth={35}
-          count={1800}
+          count={weather.starCount}
           factor={3}
           saturation={0.15}
           fade
-          speed={0.15}
+          speed={reducedMotion ? 0 : 0.12}
         />
       )}
 
-      <OrbitControls
-        panSpeed={0.05}
-        maxAzimuthAngle={0.3}
-        minAzimuthAngle={0.1}
-        minPolarAngle={0.2}
-        maxPolarAngle={2}
-        maxDistance={10}
-        minDistance={5}
-        enablePan={false}
-        enableRotate={false}
-        enableDamping={false}
+      <WeatherParticles
+        kind={weather.precipitation}
+        intensity={weather.precipitationIntensity}
+        color={weather.precipitationColor}
+        wind={weather.cloudDriftDirection}
+        reducedMotion={reducedMotion}
       />
     </Suspense>
   );

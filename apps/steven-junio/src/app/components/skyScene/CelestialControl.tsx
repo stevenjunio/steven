@@ -6,11 +6,12 @@ import {
   PORTFOLIO_LOCATION,
   type CelestialState,
 } from "./celestialTime";
-import type { WeatherSnapshot } from "./weather";
+import type { WeatherSnapshot, WeatherVisualState } from "./weather";
 
 type CelestialControlProps = {
   celestial: CelestialState;
   weather: WeatherSnapshot;
+  visual: WeatherVisualState;
 };
 
 type LabelPlacement =
@@ -47,6 +48,7 @@ function placementsMatch(
 export default function CelestialControl({
   celestial,
   weather,
+  visual,
 }: CelestialControlProps) {
   const [currentTime, setCurrentTime] = useState(() => new Date());
   const [labelPlacement, setLabelPlacement] =
@@ -66,8 +68,9 @@ export default function CelestialControl({
     return {
       left: `${8 + celestial.arcProgress * 84}%`,
       top: `${68 - arcHeight * 44}%`,
+      opacity: visual.celestialVisibility,
     };
-  }, [celestial.arcProgress]);
+  }, [celestial.arcProgress, visual.celestialVisibility]);
 
   const isMoon = celestial.body === "moon";
 
@@ -161,30 +164,45 @@ export default function CelestialControl({
     <>
       <div
         ref={celestialRef}
-        className="pointer-events-none absolute z-[5] -translate-x-1/2 -translate-y-1/2"
+        data-celestial-body={celestial.body}
+        data-sky-phase={celestial.phase}
+        className="pointer-events-none absolute z-[5] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-1000"
         style={celestialStyle}
       >
-        <div
-          aria-hidden="true"
-          className={`relative size-20 rounded-full sm:size-24 ${
-            isMoon
-              ? "bg-[#f4f1d0] shadow-[0_0_24px_8px_rgba(226,232,240,0.45)]"
-              : "bg-[#fff96b] shadow-[0_0_32px_12px_rgba(253,224,71,0.65)]"
-          }`}
-        >
-          {isMoon && (
-            <>
-              <span className="absolute left-[22%] top-[24%] size-[20%] rounded-full bg-[#c9c8b5]" />
-              <span className="absolute right-[20%] top-[38%] size-[14%] rounded-full bg-[#d5d3ba]" />
-              <span className="absolute bottom-[20%] left-[46%] size-[17%] rounded-full bg-[#c5c4b0]" />
-            </>
-          )}
-        </div>
+        {isMoon ? (
+          <div
+            aria-hidden="true"
+            className="sky-moon-orb relative size-20 rounded-full bg-[radial-gradient(circle_at_38%_34%,#fffef0_0%,#f2efcf_42%,#d3d2bd_76%,#aaa995_100%)] shadow-[0_0_34px_10px_rgba(203,213,225,0.4)] sm:size-24"
+          >
+            <span className="absolute left-[16%] top-[17%] size-[29%] rounded-full bg-[#c9c8b5]/65 shadow-[inset_2px_2px_4px_rgba(74,78,82,0.28)]" />
+            <span className="absolute right-[17%] top-[31%] size-[17%] rounded-full bg-[#d1cfb7]/70 shadow-[inset_1px_1px_3px_rgba(74,78,82,0.22)]" />
+            <span className="absolute bottom-[17%] left-[42%] size-[21%] rounded-full bg-[#c2c1ad]/70 shadow-[inset_2px_2px_3px_rgba(74,78,82,0.22)]" />
+            <span className="absolute bottom-[28%] left-[19%] size-[10%] rounded-full bg-[#d7d4bd]/70" />
+            <span className="absolute right-[25%] top-[15%] size-[8%] rounded-full bg-white/35" />
+            <span className="absolute inset-0 rounded-full bg-[linear-gradient(115deg,rgba(255,255,255,0.18),transparent_38%,rgba(30,41,59,0.15))]" />
+          </div>
+        ) : (
+          <div
+            aria-hidden="true"
+            className="sky-sun-orb relative size-20 sm:size-24"
+          >
+            <span
+              className="sky-sun-corona absolute -inset-[72%] rounded-full"
+              style={{ opacity: 0.48 + visual.sunRayOpacity }}
+            />
+            <span
+              className="sky-sun-spokes absolute -inset-[48%] rounded-full"
+              style={{ opacity: 0.2 + visual.sunRayOpacity }}
+            />
+            <span className="absolute inset-[4%] rounded-full bg-[radial-gradient(circle_at_38%_34%,#fffde0_0%,#fff87a_30%,#ffd83d_68%,#f8a91b_100%)] shadow-[0_0_35px_13px_rgba(253,224,71,0.66),0_0_90px_32px_rgba(251,191,36,0.2)]" />
+            <span className="sky-sun-granulation absolute inset-[9%] rounded-full opacity-40 mix-blend-soft-light" />
+            <span className="absolute left-[24%] top-[20%] size-[22%] rounded-full bg-white/45 blur-[2px]" />
+          </div>
+        )}
       </div>
 
       <div
         ref={labelRef}
-        role="status"
         aria-label={`Steven's home time is ${formatPortfolioTime(currentTime, false, true)} in ${PORTFOLIO_LOCATION.city}. Current conditions: ${weather.condition}.`}
         style={attachedStyle}
         className={`pointer-events-none fixed z-20 whitespace-nowrap rounded-full border border-white/10 bg-slate-950/45 px-2.5 py-1 text-[11px] font-medium tracking-wide text-white/80 shadow-sm backdrop-blur-md transition-opacity sm:text-xs ${
