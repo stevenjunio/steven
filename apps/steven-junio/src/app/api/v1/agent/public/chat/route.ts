@@ -6,6 +6,10 @@ import { AgentServiceError, askSteven } from "@/server/agent/service";
 export const runtime = "nodejs";
 
 export async function POST(request: NextRequest) {
+  if (process.env.STEVEN_AGENT_PUBLIC_MODEL_ENABLED !== "true") {
+    return agentJson({ error: "not_found" }, { status: 404 });
+  }
+
   let visitorSessionId: string | undefined;
   try {
     const body = (await request.json()) as { message?: unknown; conversationId?: unknown };

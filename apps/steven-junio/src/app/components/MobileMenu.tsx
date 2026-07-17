@@ -2,23 +2,29 @@
 import Link from "next/link";
 import { useState } from "react";
 
-function UserMenuDropdown() {
+function UserMenuDropdown({ onNavigate }: { onNavigate: () => void }) {
   return (
     <div
       id="mobile-navigation"
-      className={`w-full fixed left-0 top-[68px] h-full bg-foreground p-4 border-t-2 `}
+      className="fixed left-0 top-[68px] h-[calc(100dvh-68px)] w-full border-t-2 bg-foreground p-4"
     >
-      <nav className="">
-        <ol className="flex flex-col gap-2 text-2xl  h-full">
+      <nav className="h-full">
+        <ol className="flex h-full flex-col gap-2 text-2xl">
           <li className="h-11 hover:underline">
-            <Link href={"/"}>Home</Link>
+            <Link href={"/"} onClick={onNavigate}>Home</Link>
           </li>
 
           <li className="h-11 hover:underline">
-            <Link href={"/projects"}>Projects</Link>
+            <Link href={"/projects"} onClick={onNavigate}>Projects</Link>
           </li>
           <li className="h-11 hover:underline">
-            <Link href={"/contact"}>Contact</Link>
+            <Link href={"/contact"} onClick={onNavigate}>Contact</Link>
+          </li>
+          <li className="mt-auto border-t border-white/15 pt-4 text-base text-white/65 hover:text-white">
+            <Link href="/login" onClick={onNavigate} className="flex min-h-11 items-center gap-2">
+              <LockIcon className="size-4" />
+              Owner login
+            </Link>
           </li>
         </ol>
       </nav>
@@ -56,7 +62,16 @@ export default function MobileMenu() {
           />
         </svg>
       </button>
-      {menuVisible && <UserMenuDropdown />}
+      {menuVisible && <UserMenuDropdown onNavigate={() => setMenuVisible(false)} />}
     </div>
+  );
+}
+
+function LockIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect width="16" height="11" x="4" y="10" rx="2" />
+      <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+    </svg>
   );
 }

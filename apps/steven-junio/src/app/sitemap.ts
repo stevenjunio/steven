@@ -24,11 +24,6 @@ export default function siteMap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.8,
     },
-    {
-      url: `${baseUrl}/ask`,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
   ];
 
   const projectSiteMap = projects.map((project) => {

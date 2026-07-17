@@ -20,5 +20,10 @@ const isConfigured = Boolean(
 );
 
 export const auth0 = isConfigured
-  ? new Auth0Client({ domain, appBaseUrl: getAppBaseUrl() })
+  ? new Auth0Client({
+      domain,
+      appBaseUrl: getAppBaseUrl(),
+      signInReturnToPath: "/admin/agent",
+      enableAccessTokenEndpoint: false,
+    })
   : null;

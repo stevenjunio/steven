@@ -7,6 +7,7 @@ Steven Agent is a source-grounded AI representation of Steven. It uses Muse Spar
 - Public retrieval only sees `PUBLIC` chunks included in the current `PUBLISHED` release.
 - `PRIVATE` and `NEVER_PUBLISH` records never appear in public retrieval.
 - Private model calls stay disabled unless `STEVEN_AGENT_PRIVATE_MODEL_ENABLED=true`.
+- Public chat and its API stay unavailable unless `STEVEN_AGENT_PUBLIC_MODEL_ENABLED=true`.
 - Every generated factual answer must contain a valid retrieved-source citation. Answers without one become an abstention.
 - Muse receives no tools or web-search capability.
 - Public calls reserve their maximum estimated cost before generation. Defaults are $0.50/day, $5/month, 10 questions per visitor/day, five/minute, and three concurrent requests.
@@ -16,6 +17,7 @@ Steven Agent is a source-grounded AI representation of Steven. It uses Muse Spar
 
 1. Copy `.env.example` to an untracked local environment file and fill the required values.
 2. Set `AUTH0_ADMIN_SUBS` to Steven's immutable Auth0 `sub`, not an email address.
+   Use `/login`; after authentication an unapproved account sees its own subject so it can be added safely.
 3. Apply `npx prisma migrate deploy` from `apps/steven-junio`.
 4. Open `/admin/knowledge`, select **Sync portfolio + blog**, review the sources, then publish a named release.
 5. Configure a paid Meta Model API account and set `META_MODEL_API_KEY`.
@@ -45,6 +47,8 @@ The MCP resource uses Auth0 bearer tokens with the configured audience and suppo
 - `steven:memory:propose` — `propose_steven_memory`
 
 Only subjects listed in `AUTH0_ADMIN_SUBS` are accepted, even when a token has the requested scope.
+
+Register `https://www.stevenjunio.com/auth/callback` as an Auth0 Allowed Callback URL and `https://www.stevenjunio.com` as an Allowed Logout URL. The `/login` page is only an authentication entry point; it never grants access without the server-side subject allowlist.
 
 ## Operational checks
 

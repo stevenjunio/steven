@@ -3,6 +3,10 @@ import { getPrisma } from "@/library/prisma";
 import { agentJson, publicVisitor } from "@/server/agent/http";
 
 export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
+  if (process.env.STEVEN_AGENT_PUBLIC_MODEL_ENABLED !== "true") {
+    return agentJson({ error: "not_found" }, { status: 404 });
+  }
+
   const { id } = await context.params;
   const visitor = publicVisitor(request);
   const conversation = await getPrisma().agentConversation.findFirst({
@@ -13,6 +17,10 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
 }
 
 export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
+  if (process.env.STEVEN_AGENT_PUBLIC_MODEL_ENABLED !== "true") {
+    return agentJson({ error: "not_found" }, { status: 404 });
+  }
+
   const { id } = await context.params;
   const visitor = publicVisitor(request);
   const prisma = getPrisma();
