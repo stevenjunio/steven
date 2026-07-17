@@ -4,6 +4,7 @@ import { agentJson, publicVisitor } from "@/server/agent/http";
 import { AgentServiceError, askSteven } from "@/server/agent/service";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
 export async function POST(request: NextRequest) {
   if (process.env.STEVEN_AGENT_PUBLIC_MODEL_ENABLED !== "true") {

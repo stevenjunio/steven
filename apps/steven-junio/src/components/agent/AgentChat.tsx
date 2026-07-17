@@ -63,16 +63,25 @@ export function AgentChat({ mode = "public", compact = false, variant = "card" }
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: value, conversationId }),
       });
-      const body = await response.json();
+      const payload = await response.text();
+      let body: { answer?: string; citations?: Citation[]; conversationId?: string; message?: string; messageId?: string };
+      try {
+        body = JSON.parse(payload) as typeof body;
+      } catch {
+        throw new Error("AI Steven did not return a valid response. Please try again.");
+      }
       if (!response.ok) throw new Error(body.message ?? "AI Steven is temporarily unavailable.");
-      setConversationId(body.conversationId);
-      window.localStorage.setItem(storageKey, body.conversationId);
+      if (!body.answer || !body.conversationId) throw new Error("AI Steven returned an incomplete response. Please try again.");
+      const answer = body.answer;
+      const nextConversationId = body.conversationId;
+      setConversationId(nextConversationId);
+      window.localStorage.setItem(storageKey, nextConversationId);
       setMessages((current) => [
         ...current,
         {
           id: body.messageId ?? crypto.randomUUID(),
           role: "ASSISTANT",
-          content: body.answer,
+          content: answer,
           citations: body.citations,
         },
       ]);
