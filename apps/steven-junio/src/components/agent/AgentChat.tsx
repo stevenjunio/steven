@@ -4,8 +4,13 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 
 type Citation = { id: string; title: string; url: string | null; excerpt: string };
 type Message = { id: string; role: "USER" | "ASSISTANT"; content: string; citations?: Citation[] };
+type AgentChatProps = {
+  mode?: "public" | "private";
+  compact?: boolean;
+  variant?: "card" | "page";
+};
 
-export function AgentChat({ mode = "public", compact = false }: { mode?: "public" | "private"; compact?: boolean }) {
+export function AgentChat({ mode = "public", compact = false, variant = "card" }: AgentChatProps) {
   const storageKey = `steven-agent-${mode}-conversation`;
   const [conversationId, setConversationId] = useState<string>();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -14,6 +19,7 @@ export function AgentChat({ mode = "public", compact = false }: { mode?: "public
   const [error, setError] = useState<string>();
   const endRef = useRef<HTMLDivElement>(null);
   const maxLength = mode === "public" ? 1_500 : 8_000;
+  const isPage = variant === "page";
 
   useEffect(() => {
     const saved = window.localStorage.getItem(storageKey);
@@ -86,31 +92,39 @@ export function AgentChat({ mode = "public", compact = false }: { mode?: "public
   }
 
   return (
-    <section className={`flex min-h-0 flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-slate-950/10 ${compact ? "h-[min(70vh,620px)]" : "h-[min(72vh,720px)]"}`}>
-      <header className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="size-2.5 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgb(16_185_129_/_0.13)]" />
+    <section
+      aria-label="Chat with AI Steven"
+      className={`flex min-h-0 flex-col overflow-hidden border border-slate-200 bg-white ${
+        isPage
+          ? "h-full rounded-none border-y-0 shadow-none sm:rounded-2xl sm:border-y sm:shadow-sm"
+          : `rounded-3xl shadow-2xl shadow-slate-950/10 ${compact ? "h-[min(70vh,620px)]" : "h-[min(72vh,720px)]"}`
+      }`}
+    >
+      <header className="flex items-center justify-between gap-4 border-b border-slate-200 px-4 py-3 sm:px-5">
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-slate-950 text-[11px] font-semibold tracking-wide text-white">SJ</span>
+          <div className="min-w-0">
             <h2 className="font-semibold text-slate-950">AI Steven</h2>
+            <p className="truncate text-xs text-slate-500">AI representation of Steven</p>
           </div>
-          <p className="mt-1 text-xs text-slate-500">An AI, answering only from information Steven shared.</p>
         </div>
         {messages.length > 0 && (
-          <button onClick={deleteConversation} className="rounded-lg px-3 py-2 text-xs font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-900">
-            Delete chat
+          <button type="button" onClick={deleteConversation} className="shrink-0 rounded-lg px-3 py-2 text-xs font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-900">
+            New chat
           </button>
         )}
       </header>
 
-      <div aria-live="polite" className="flex-1 space-y-5 overflow-y-auto bg-slate-50/70 p-5">
+      <div
+        aria-live="polite"
+        className={`flex-1 overflow-y-auto bg-slate-50/70 ${messages.length > 0 ? "space-y-5" : ""} ${isPage ? "p-4 sm:p-6" : "p-5"}`}
+      >
         {messages.length === 0 && (
-          <div className="mx-auto flex h-full max-w-md flex-col items-center justify-center text-center">
-            <div className="mb-4 grid size-14 place-items-center rounded-2xl bg-slate-950 text-xl text-white">SJ</div>
-            <h3 className="text-xl font-semibold text-slate-950">Ask me about my work</h3>
-            <p className="mt-2 text-sm leading-6 text-slate-600">Try my projects, the products I’ve built, my experience, or how I approach taking software from idea to launch.</p>
+          <div className="mx-auto flex h-full max-w-xl flex-col items-center justify-center text-center">
+            <h3 className="text-xl font-semibold tracking-tight text-slate-950 sm:text-2xl">Ask me about my work</h3>
             <div className="mt-5 flex flex-wrap justify-center gap-2">
               {["What are you building now?", "Tell me about Tabiya", "What kind of developer are you?"].map((prompt) => (
-                <button key={prompt} onClick={() => setInput(prompt)} className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 hover:border-slate-400">
+                <button type="button" key={prompt} onClick={() => setInput(prompt)} className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs text-slate-600 transition hover:border-slate-400 hover:text-slate-950">
                   {prompt}
                 </button>
               ))}
@@ -122,19 +136,23 @@ export function AgentChat({ mode = "public", compact = false }: { mode?: "public
             <div className={`max-w-[88%] rounded-2xl px-4 py-3 text-sm leading-6 ${message.role === "USER" ? "rounded-br-md bg-slate-950 text-white" : "rounded-bl-md border border-slate-200 bg-white text-slate-800 shadow-sm"}`}>
               <p className="whitespace-pre-wrap">{message.content}</p>
               {message.citations && message.citations.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-2 border-t border-slate-100 pt-3">
-                  {message.citations.map((citation) =>
-                    citation.url ? (
-                      <a key={citation.id} href={citation.url} target="_blank" rel="noreferrer" title={citation.excerpt} className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600 hover:bg-slate-200">
-                        {citation.id} · {citation.title}
-                      </a>
-                    ) : (
-                      <span key={citation.id} title={citation.excerpt} className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600">
-                        {citation.id} · {citation.title}
-                      </span>
-                    ),
-                  )}
-                </div>
+                <details className="mt-3 border-t border-slate-100 pt-2 text-xs text-slate-500">
+                  <summary className="w-fit cursor-pointer select-none font-medium hover:text-slate-800">Sources ({message.citations.length})</summary>
+                  <ul className="mt-2 space-y-2">
+                    {message.citations.map((citation) => (
+                      <li key={citation.id}>
+                        {citation.url ? (
+                          <a href={citation.url} target="_blank" rel="noreferrer" className="font-medium text-slate-700 underline decoration-slate-300 underline-offset-2 hover:text-slate-950">
+                            {citation.id} · {citation.title}
+                          </a>
+                        ) : (
+                          <span className="font-medium text-slate-700">{citation.id} · {citation.title}</span>
+                        )}
+                        {citation.excerpt && <p className="mt-0.5 line-clamp-2 leading-5 text-slate-500">{citation.excerpt}</p>}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
               )}
             </div>
           </article>
@@ -144,8 +162,8 @@ export function AgentChat({ mode = "public", compact = false }: { mode?: "public
         <div ref={endRef} />
       </div>
 
-      <form onSubmit={submit} className="border-t border-slate-200 bg-white p-4">
-        <div className="flex items-end gap-3 rounded-2xl border border-slate-300 bg-white p-2 focus-within:border-slate-600 focus-within:ring-2 focus-within:ring-slate-100">
+      <form onSubmit={submit} className={`border-t border-slate-200 bg-white ${isPage ? "px-3 pb-3 pt-3 sm:px-5 sm:pb-4" : "p-4"}`}>
+        <div className="mx-auto flex max-w-3xl items-end gap-3 rounded-2xl border border-slate-300 bg-white p-2 shadow-sm focus-within:border-slate-600 focus-within:ring-2 focus-within:ring-slate-100">
           <textarea
             value={input}
             onChange={(event) => setInput(event.target.value)}
@@ -164,7 +182,7 @@ export function AgentChat({ mode = "public", compact = false }: { mode?: "public
             <span aria-hidden="true">↑</span>
           </button>
         </div>
-        <p className="mt-2 px-1 text-center text-[11px] text-slate-400">AI can make mistakes. Answers are limited to Steven’s published sources.</p>
+        <p className="mt-2 px-1 text-center text-[11px] text-slate-400">Grounded in Steven’s published sources. AI can make mistakes.</p>
       </form>
     </section>
   );
