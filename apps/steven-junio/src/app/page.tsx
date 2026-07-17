@@ -70,6 +70,10 @@ export default function Home() {
               <Button asChild variant="secondary">
                 <Link href="/contact">Contact Me</Link>
               </Button>
+
+              <Button asChild variant="secondary">
+                <Link href="/ask">Ask AI Steven</Link>
+              </Button>
             </div>
           </div>
           <nav

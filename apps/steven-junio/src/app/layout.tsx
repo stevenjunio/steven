@@ -4,6 +4,7 @@ import "@radix-ui/themes/styles.css";
 import { Analytics } from "@vercel/analytics/react";
 import { Theme } from "@radix-ui/themes";
 import { Metadata } from "next";
+import { AgentLauncher } from "@/components/agent/AgentLauncher";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.stevenjunio.com"),
@@ -47,6 +48,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="min-h-screen">
         <Theme>{children} </Theme>
+        <AgentLauncher />
         <SpeedInsights />
         <Analytics />
       </body>

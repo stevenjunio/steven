@@ -8,9 +8,10 @@ interface BlogProps {
 export default async function Blog({ params }: BlogProps) {
   const { slug } = await params;
   const prisma = getPrisma();
-  const post = await prisma.post.findUnique({
+  const post = await prisma.post.findFirst({
     where: {
       slug,
+      published: true,
     },
   });
   return (

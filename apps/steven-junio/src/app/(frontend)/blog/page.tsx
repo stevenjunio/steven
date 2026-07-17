@@ -7,6 +7,9 @@ export default async function Blog() {
   const prisma = getPrisma();
 
   const posts = await prisma.post.findMany({
+    where: {
+      published: true,
+    },
     select: {
       title: true,
       content: true,

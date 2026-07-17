@@ -2,7 +2,10 @@ import NavItem from "./NavItem";
 import Link from "next/link";
 import MobileMenu from "./MobileMenu";
 
-const navMenu = [{ title: "Contact", link: "/contact" }];
+const navMenu = [
+  { title: "Ask AI Steven", link: "/ask" },
+  { title: "Contact", link: "/contact" },
+];
 
 export default async function HideableHeader() {
   return (

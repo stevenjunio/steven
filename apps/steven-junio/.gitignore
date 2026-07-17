@@ -28,6 +28,7 @@ yarn-error.log*
 # local env files
 .env*.local
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -41,5 +42,4 @@ next-env.d.ts
 
 # generated Prisma client
 /src/generated/prisma
-
 

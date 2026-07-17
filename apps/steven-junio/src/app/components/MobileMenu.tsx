@@ -18,6 +18,9 @@ function UserMenuDropdown() {
             <Link href={"/projects"}>Projects</Link>
           </li>
           <li className="h-11 hover:underline">
+            <Link href={"/ask"}>Ask AI Steven</Link>
+          </li>
+          <li className="h-11 hover:underline">
             <Link href={"/contact"}>Contact</Link>
           </li>
         </ol>
