@@ -229,7 +229,6 @@ const TimeOfDayScene = () => {
 
       <CelestialControl
         celestial={celestial}
-        weather={weather}
         visual={weatherVisual}
       />
       <AtmosphereLayers celestial={celestial} weather={weatherVisual} />
