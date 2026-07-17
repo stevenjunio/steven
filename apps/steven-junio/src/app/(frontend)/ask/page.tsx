@@ -4,6 +4,10 @@ import { AgentChat } from "@/components/agent/AgentChat";
 export const metadata: Metadata = {
   title: "Ask AI Steven",
   description: "Ask an AI representation of Steven Junio about his work, projects, and experience.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function AskStevenPage() {
