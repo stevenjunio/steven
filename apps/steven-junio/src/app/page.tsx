@@ -88,19 +88,6 @@ export default function Home() {
                 <span>{label}</span>
               </Link>
             ))}
-            <span className="mx-0.5 h-6 w-px bg-white/15" aria-hidden="true" />
-            <Link
-              href="/login"
-              aria-label="Owner login"
-              title="Owner login"
-              className="flex min-h-10 items-center gap-1.5 rounded-xl px-2.5 text-xs font-medium tracking-wide text-white/60 transition-colors hover:bg-white/15 hover:text-white focus-visible:bg-white/15 focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 sm:px-3 sm:text-sm"
-            >
-              <svg aria-hidden="true" viewBox="0 0 24 24" className="size-4 fill-none stroke-current" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8">
-                <rect width="16" height="11" x="4" y="10" rx="2" />
-                <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-              </svg>
-              <span>Login</span>
-            </Link>
           </nav>
         </div>
       </main>
