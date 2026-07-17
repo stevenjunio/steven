@@ -178,7 +178,8 @@ export const projects = [
     slug: "tubey-the-tubeman",
     title: "Tubey The Tubeman",
     importance: 5,
-    image: "/images/tubey-the-tubeman.webp",
+    image: "/images/tubey-the-tubeman.jpg",
+    previewVideo: "/videos/tubey-preview.mp4",
     video:
       "https://files.stevenjunio.com/Tubey%202.0%20Website%20%20Video_FINAL_50%20mbps.mp4",
     description: "The original Mini Wacky Wavy Inflatable Arm Flailing Tubeman",

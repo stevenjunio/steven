@@ -1,6 +1,6 @@
 import { Card, Inset, Text, Flex, Box, Heading } from "@radix-ui/themes";
 import Image from "next/image";
-import { ChevronRight, CirclePlay } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { projects } from "../../../../data/projects";
 import { Metadata } from "next";
@@ -31,11 +31,19 @@ function ProjectCard({ project }: { project: Project }) {
     >
       <Card className="h-full cursor-pointer overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
         <Inset clip="padding-box" side="top" pb="current">
-          {project.video ? (
-            <div className="flex h-48 items-center justify-center bg-slate-900 text-white">
-              <CirclePlay aria-hidden="true" size={42} strokeWidth={1.5} />
-              <span className="sr-only">Project video available</span>
-            </div>
+          {"previewVideo" in project && project.previewVideo ? (
+            <video
+              aria-label={`${project.title} preview`}
+              autoPlay
+              className="h-48 w-full object-cover"
+              loop
+              muted
+              playsInline
+              poster={project.image}
+              preload="metadata"
+            >
+              <source src={project.previewVideo} type="video/mp4" />
+            </video>
           ) : (
             <Image
               className="h-48 w-full object-cover"

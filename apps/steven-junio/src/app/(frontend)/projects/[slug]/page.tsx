@@ -99,6 +99,7 @@ export default async function ProjectPage({ params }: Props) {
                 controls
                 playsInline
                 preload="none"
+                poster={project.image}
                 aria-label={`${project.title} project video`}
                 className="w-full max-h-[500px] rounded-lg"
               >
