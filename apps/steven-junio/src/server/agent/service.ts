@@ -98,6 +98,34 @@ export async function askSteven(input: {
   rateLimitIds?: string[];
   ownerSub?: string;
 }) {
+  if (input.scope === "PRIVATE" && /\bremember\b/i.test(input.message)) {
+    if (!input.ownerSub) throw new AgentServiceError("owner_required", 401, "Owner identity missing.");
+    const prisma = getPrisma();
+    const conversation = await conversationFor(input);
+    const userMessage = await prisma.agentMessage.create({
+      data: { conversationId: conversation.id, role: "USER", content: input.message },
+    });
+    await prisma.memoryCandidate.create({
+      data: {
+        scope: "PRIVATE",
+        content: input.message,
+        evidence: { conversationId: conversation.id, messageId: userMessage.id },
+      },
+    });
+    const answer = "I saved that as a proposed memory. Review and approve it before I use it as a durable fact.";
+    const assistantMessage = await prisma.agentMessage.create({
+      data: { conversationId: conversation.id, role: "ASSISTANT", content: answer, citations: [] },
+    });
+    return {
+      conversationId: conversation.id,
+      messageId: assistantMessage.id,
+      answer,
+      citations: [],
+      abstained: false,
+      memoryProposed: true,
+    };
+  }
+
   if (!process.env.META_MODEL_API_KEY) {
     throw new AgentServiceError("not_configured", 503, "AI Steven is not configured yet.");
   }
@@ -227,15 +255,6 @@ export async function askSteven(input: {
         actualMicros,
         inputTokens: response.usage?.inputTokens ?? estimatedInputTokens,
         outputTokens: response.usage?.outputTokens ?? 1_200,
-      });
-    }
-    if (input.scope === "PRIVATE" && /\bremember\b/i.test(input.message)) {
-      await prisma.memoryCandidate.create({
-        data: {
-          scope: "PRIVATE",
-          content: input.message,
-          evidence: { conversationId: conversation.id, messageId: userMessage.id },
-        },
       });
     }
     return { conversationId: conversation.id, messageId: assistantMessage.id, answer, citations, abstained };

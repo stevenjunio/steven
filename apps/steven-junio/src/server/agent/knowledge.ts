@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { getPrisma } from "@/library/prisma";
 import type { Prisma } from "@/generated/prisma/client";
 import { chunkKnowledge } from "./chunking.ts";
+import { rankRetrievedKnowledge } from "./ranking.ts";
 
 export interface RetrievedKnowledge {
   id: string;
@@ -135,26 +136,36 @@ function cosine(left: number[], right: number[]) {
 
 export async function retrieveKnowledge(query: string, scope: "PUBLIC" | "PRIVATE", limit = 6) {
   const prisma = getPrisma();
-  const rows = (await prisma.knowledgeChunk.findMany({
-    where:
-      scope === "PUBLIC"
-        ? {
-            scope: "PUBLIC",
-            revision: { status: "READY", source: { modelAccess: true, scope: "PUBLIC" } },
-            releaseItems: { some: { release: { status: "PUBLISHED" } } },
-          }
-        : {
-            scope: { in: ["PUBLIC", "PRIVATE", "NEVER_PUBLISH"] },
-            revision: { status: "READY", source: { modelAccess: true, scope: { in: ["PUBLIC", "PRIVATE", "NEVER_PUBLISH"] } } },
-          },
-    include: { revision: { include: { source: true } } },
-    orderBy: { createdAt: "desc" },
-    take: 300,
-  })) as Prisma.KnowledgeChunkGetPayload<{ include: { revision: { include: { source: true } } } }>[];
+  const [rows, memoryFacts] = await Promise.all([
+    prisma.knowledgeChunk.findMany({
+      where:
+        scope === "PUBLIC"
+          ? {
+              scope: "PUBLIC",
+              revision: { status: "READY", source: { modelAccess: true, scope: "PUBLIC" } },
+              releaseItems: { some: { release: { status: "PUBLISHED" } } },
+            }
+          : {
+              scope: { in: ["PUBLIC", "PRIVATE", "NEVER_PUBLISH"] },
+              revision: { status: "READY", source: { modelAccess: true, scope: { in: ["PUBLIC", "PRIVATE", "NEVER_PUBLISH"] } } },
+            },
+      include: { revision: { include: { source: true } } },
+      orderBy: { createdAt: "desc" },
+      take: 300,
+    }),
+    scope === "PRIVATE"
+      ? prisma.memoryFact.findMany({
+          where: { scope: { in: ["PRIVATE", "NEVER_PUBLISH"] }, archivedAt: null },
+          orderBy: { createdAt: "desc" },
+          take: 100,
+        })
+      : Promise.resolve([]),
+  ]);
+  const knowledgeRows = rows as Prisma.KnowledgeChunkGetPayload<{ include: { revision: { include: { source: true } } } }>[];
   const [queryEmbedding] = await createEmbeddings([query]);
   const terms = queryTerms(query);
 
-  return rows
+  const chunks = knowledgeRows
     .map((row) => {
       const vector = Array.isArray(row.embedding) ? (row.embedding as number[]) : null;
       const semantic = queryEmbedding && vector ? Math.max(0, cosine(queryEmbedding, vector)) * 10 : 0;
@@ -165,10 +176,19 @@ export async function retrieveKnowledge(query: string, scope: "PUBLIC" | "PRIVAT
         content: row.content,
         score: lexicalScore(`${row.revision.source.name}\n${row.content}`, terms) + semantic,
       } satisfies RetrievedKnowledge;
-    })
-    .filter((row) => row.score > 0 || terms.length === 0)
-    .sort((left, right) => right.score - left.score)
-    .slice(0, limit);
+    });
+  const memories = memoryFacts.map((fact) => ({
+    id: `memory:${fact.id}`,
+    sourceName: "Approved memory",
+    sourceUrl: null,
+    content: fact.content,
+    score: lexicalScore(fact.content, terms),
+  } satisfies RetrievedKnowledge));
+  const candidates = terms.length === 0
+    ? [...chunks, ...memories].map((item) => ({ ...item, score: item.score || 1 }))
+    : [...chunks, ...memories];
+
+  return rankRetrievedKnowledge(candidates, limit);
 }
 
 export async function publishPublicRelease(name: string) {
