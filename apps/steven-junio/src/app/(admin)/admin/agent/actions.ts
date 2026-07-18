@@ -30,5 +30,5 @@ export async function reviewMemoryAction(formData: FormData) {
       data: { actorSub, action: `memory.${decision}d`, entityType: "MemoryCandidate", entityId: id, scope: candidate.scope },
     });
   });
-  revalidatePath("/admin/agent");
+  revalidatePath("/chat");
 }

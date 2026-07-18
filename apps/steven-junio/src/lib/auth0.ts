@@ -23,7 +23,7 @@ export const auth0 = isConfigured
   ? new Auth0Client({
       domain,
       appBaseUrl: getAppBaseUrl(),
-      signInReturnToPath: "/admin/agent",
+      signInReturnToPath: "/chat",
       enableAccessTokenEndpoint: false,
     })
   : null;

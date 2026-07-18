@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write Product Copy"
+  short_description: "Keep interface copy useful and minimal"
+  default_prompt: "Use $write-product-copy to audit and simplify user-facing interface copy."

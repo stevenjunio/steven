@@ -6,6 +6,10 @@
 - After validation, commit and push only the completed task's files to the current remote branch. Preserve unrelated changes; never ship partial or failing work, secrets, or credentials.
 - If publishing is blocked, report why and leave the validated commit intact locally.
 
+## User-facing copy
+
+- Use `.agents/skills/write-product-copy/SKILL.md` whenever adding or changing visible website or chat copy. Start from no copy, keep only text that helps the current user act or recover, and keep internal product discussion and implementation rationale out of the interface.
+
 ## Maintain these instructions
 
 - Keep only durable, repository-specific rules that address repeated friction, a non-obvious constraint, or a verified workflow.

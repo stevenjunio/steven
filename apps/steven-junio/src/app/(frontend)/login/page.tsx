@@ -17,7 +17,7 @@ export default async function OwnerLoginPage() {
   const subject = session?.user?.sub;
   const adminSubject = await getAdminSubject();
 
-  if (adminSubject) redirect("/admin/agent");
+  if (adminSubject) redirect("/chat");
 
   return (
     <main className="grid min-h-[calc(100dvh-68px)] place-items-center bg-slate-50 px-5 py-12 text-slate-950">
@@ -49,7 +49,7 @@ export default async function OwnerLoginPage() {
               Sign in to talk with your private agent, add memories in plain language, and attach files from your phone.
             </p>
             {auth0 ? (
-              <a href="/auth/login?returnTo=/admin/agent" className="mt-7 inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2">
+              <a href="/auth/login?returnTo=/chat" className="mt-7 inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2">
                 Continue to sign in
               </a>
             ) : (

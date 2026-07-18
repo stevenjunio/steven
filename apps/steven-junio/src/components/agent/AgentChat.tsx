@@ -3,40 +3,45 @@
 import { ChangeEvent, FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 
 type Citation = { id: string; title: string; url: string | null; excerpt: string };
-type Message = { id: string; role: "USER" | "ASSISTANT"; content: string; citations?: Citation[]; streaming?: boolean };
+type SpendSummary = { spentMicros: number; reservedMicros: number; limitMicros: number };
+type Message = {
+  id: string;
+  role: "USER" | "ASSISTANT";
+  content: string;
+  citations?: Citation[];
+  costMicros?: number;
+  streaming?: boolean;
+};
 type StreamEvent = {
   type: "delta" | "done" | "error";
   delta?: string;
   answer?: string;
   citations?: Citation[];
   conversationId?: string;
+  costMicros?: number;
   message?: string;
   messageId?: string;
+  monthlySpend?: SpendSummary;
 };
 type AgentChatProps = {
   mode?: "public" | "private";
   compact?: boolean;
   variant?: "card" | "page";
+  initialMonthlySpend?: SpendSummary;
 };
 
-const PUBLIC_PROMPTS = [
-  "What has been on your mind lately?",
-  "What do you care about when building things?",
-  "Tell me something beyond your résumé",
-];
-
-const PRIVATE_PROMPTS = [
-  "Remember that I…",
-  "What do you know about me?",
-  "Help me think through something",
-];
-
-export function AgentChat({ mode = "public", compact = false, variant = "card" }: AgentChatProps) {
+export function AgentChat({
+  mode = "public",
+  compact = false,
+  variant = "card",
+  initialMonthlySpend,
+}: AgentChatProps) {
   const storageKey = `steven-agent-${mode}-conversation`;
   const [conversationId, setConversationId] = useState<string>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [attachment, setAttachment] = useState<File>();
+  const [monthlySpend, setMonthlySpend] = useState(initialMonthlySpend);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
   const endRef = useRef<HTMLDivElement>(null);
@@ -78,14 +83,6 @@ export function AgentChat({ mode = "public", compact = false, variant = "card" }
     if (!textarea) return;
     textarea.style.height = "0px";
     textarea.style.height = `${Math.min(textarea.scrollHeight, 144)}px`;
-  }
-
-  function selectPrompt(prompt: string) {
-    setInput(prompt);
-    requestAnimationFrame(() => {
-      resizeTextarea();
-      textareaRef.current?.focus();
-    });
   }
 
   function chooseFile(event: ChangeEvent<HTMLInputElement>) {
@@ -133,7 +130,7 @@ export function AgentChat({ mode = "public", compact = false, variant = "card" }
       const response = await fetch(`/api/v1/agent/${mode}/chat`, { method: "POST", headers, body });
       if (!response.ok || !response.body) {
         const failed = (await response.json().catch(() => null)) as { message?: string } | null;
-        throw new Error(failed?.message ?? "Steven’s agent is temporarily unavailable.");
+        throw new Error(failed?.message ?? "Chat is temporarily unavailable.");
       }
 
       const reader = response.body.getReader();
@@ -144,7 +141,7 @@ export function AgentChat({ mode = "public", compact = false, variant = "card" }
       const consumeLine = (line: string) => {
         if (!line.trim()) return;
         const streamEvent = JSON.parse(line) as StreamEvent;
-        if (streamEvent.type === "error") throw new Error(streamEvent.message ?? "Steven’s agent is temporarily unavailable.");
+        if (streamEvent.type === "error") throw new Error(streamEvent.message ?? "Chat is temporarily unavailable.");
         if (streamEvent.type === "delta" && streamEvent.delta) {
           setMessages((current) => current.map((message) =>
             message.id === assistantId
@@ -165,10 +162,11 @@ export function AgentChat({ mode = "public", compact = false, variant = "card" }
       }
       if (buffer) consumeLine(buffer);
       if (!finalEvent?.answer || !finalEvent.conversationId) {
-        throw new Error("Steven’s agent returned an incomplete response. Please try again.");
+        throw new Error("The response was interrupted. Try again.");
       }
 
       setConversationId(finalEvent.conversationId);
+      if (finalEvent.monthlySpend) setMonthlySpend(finalEvent.monthlySpend);
       window.localStorage.setItem(storageKey, finalEvent.conversationId);
       setMessages((current) => current.map((message) =>
         message.id === assistantId
@@ -177,13 +175,14 @@ export function AgentChat({ mode = "public", compact = false, variant = "card" }
               role: "ASSISTANT",
               content: finalEvent?.answer ?? message.content,
               citations: finalEvent?.citations,
+              costMicros: finalEvent?.costMicros,
               streaming: false,
             }
           : message,
       ));
     } catch (caught) {
       setMessages((current) => current.filter((message) => message.id !== assistantId || message.content));
-      setError(caught instanceof Error ? caught.message : "Steven’s agent is temporarily unavailable.");
+      setError(caught instanceof Error ? caught.message : "Chat is temporarily unavailable.");
     } finally {
       setLoading(false);
       requestAnimationFrame(() => textareaRef.current?.focus());
@@ -207,58 +206,46 @@ export function AgentChat({ mode = "public", compact = false, variant = "card" }
     }
   }
 
-  const prompts = isPrivate ? PRIVATE_PROMPTS : PUBLIC_PROMPTS;
+  const budgetPercent = monthlySpend
+    ? Math.min(100, (monthlySpend.spentMicros / monthlySpend.limitMicros) * 100)
+    : 0;
 
   return (
     <section
-      aria-label={isPrivate ? "Steven's private agent" : "Chat with Steven's AI"}
-      className={`flex min-h-0 flex-col overflow-hidden bg-white ${
+      aria-label="Chat"
+      className={`relative flex min-h-0 flex-col overflow-hidden bg-white ${
         isPage
           ? "h-full rounded-none sm:rounded-[28px] sm:border sm:border-slate-200/80 sm:shadow-xl sm:shadow-slate-950/5"
           : `rounded-3xl border border-slate-200 shadow-2xl shadow-slate-950/10 ${compact ? "h-[min(74vh,660px)]" : "h-[min(78vh,760px)]"}`
       }`}
     >
-      <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b border-slate-200/80 px-4 sm:px-6">
-        <div className="flex min-w-0 items-center gap-3">
-          <span className="grid size-9 shrink-0 place-items-center rounded-full bg-slate-950 text-[11px] font-semibold tracking-wide text-white">SJ</span>
-          <div className="min-w-0">
-            <h2 className="font-semibold tracking-tight text-slate-950">Steven&apos;s agent</h2>
-            <p className="truncate text-xs text-slate-500">{isPrivate ? "Private · teach me anything" : "An evolving AI reflection of Steven"}</p>
+      {messages.length > 0 && (
+        <button type="button" onClick={deleteConversation} disabled={loading} aria-label="New chat" className="absolute left-3 top-3 z-10 grid size-9 place-items-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-900 disabled:opacity-40 sm:left-4 sm:top-4">
+          <ComposeIcon className="size-4" />
+        </button>
+      )}
+      {isPrivate && monthlySpend && (
+        <div className="absolute right-4 top-4 z-10 w-24" aria-label={`Monthly agent spend: ${formatBudget(monthlySpend.spentMicros)} of ${formatBudget(monthlySpend.limitMicros)}`}>
+          <p className="text-right text-[10px] tabular-nums text-slate-400">
+            {formatBudget(monthlySpend.spentMicros)} / {formatBudget(monthlySpend.limitMicros)}
+          </p>
+          <div className="mt-1 h-px overflow-hidden bg-slate-200" role="progressbar" aria-valuemin={0} aria-valuemax={monthlySpend.limitMicros} aria-valuenow={monthlySpend.spentMicros}>
+            <div className="h-full bg-slate-500" style={{ width: `${budgetPercent}%` }} />
           </div>
         </div>
-        {messages.length > 0 && (
-          <button type="button" onClick={deleteConversation} disabled={loading} className="shrink-0 rounded-full px-3 py-2 text-xs font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 disabled:opacity-40">
-            New chat
-          </button>
-        )}
-      </header>
+      )}
 
-      <div aria-live="polite" className={`flex-1 overflow-y-auto overscroll-contain bg-[#fafafa] ${messages.length > 0 ? "space-y-6" : ""} ${isPage ? "px-4 py-6 sm:px-8 sm:py-8" : "p-5"}`}>
-        {messages.length === 0 && (
-          <div className="mx-auto flex h-full max-w-xl flex-col items-center justify-center text-center">
-            <span className="mb-5 grid size-14 place-items-center rounded-2xl bg-slate-950 text-sm font-semibold tracking-wide text-white shadow-lg shadow-slate-950/15">SJ</span>
-            <h3 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-              {isPrivate ? "What should I know?" : "Talk with my agent"}
-            </h3>
-            <p className="mt-3 max-w-md text-sm leading-6 text-slate-500">
-              {isPrivate
-                ? "Tell me to remember a thought, opinion, preference, or moment. Attach a file and I’ll add that too."
-                : "Ask about my ideas, work, interests, or anything else. This version of me gets richer as I add more of myself."}
-            </p>
-            <div className="mt-7 flex flex-wrap justify-center gap-2">
-              {prompts.map((prompt) => (
-                <button type="button" key={prompt} onClick={() => selectPrompt(prompt)} className="rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-300 hover:text-slate-950">
-                  {prompt}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+      <div aria-live="polite" className={`flex-1 overflow-y-auto overscroll-contain bg-[#fafafa] ${messages.length > 0 ? "space-y-6" : ""} ${isPage ? "px-4 py-16 sm:px-8" : "p-5 pt-14"}`}>
         {messages.map((message) => (
           <article key={message.id} className={`mx-auto flex w-full max-w-3xl ${message.role === "USER" ? "justify-end" : "justify-start"}`}>
             <div className={`max-w-[88%] text-[15px] leading-7 sm:max-w-[78%] ${message.role === "USER" ? "rounded-3xl rounded-br-lg bg-slate-950 px-4 py-2.5 text-white" : "text-slate-800"}`}>
               {message.content ? <p className="whitespace-pre-wrap">{message.content}</p> : <ThinkingDots />}
               {message.streaming && message.content && <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse rounded-full bg-slate-400 align-middle" aria-hidden="true" />}
+              {!message.streaming && message.role === "ASSISTANT" && Boolean(message.costMicros) && (
+                <p className="mt-1 text-[10px] leading-none tabular-nums text-slate-400" aria-label={`This response cost ${formatTurnCost(message.costMicros ?? 0)}`}>
+                  {formatTurnCost(message.costMicros ?? 0)}
+                </p>
+              )}
               {message.citations && message.citations.length > 0 && (
                 <details className="mt-3 border-t border-slate-200 pt-2 text-xs text-slate-500">
                   <summary className="w-fit cursor-pointer select-none font-medium hover:text-slate-800">Sources · {message.citations.length}</summary>
@@ -293,7 +280,7 @@ export function AgentChat({ mode = "public", compact = false, variant = "card" }
           {isPrivate && (
             <>
               <input ref={fileRef} type="file" accept=".txt,.md,.pdf,.docx,text/plain,text/markdown,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={chooseFile} className="sr-only" />
-              <button type="button" onClick={() => fileRef.current?.click()} disabled={loading} aria-label="Attach a file to memory" className="grid size-11 shrink-0 place-items-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 disabled:opacity-40">
+              <button type="button" onClick={() => fileRef.current?.click()} disabled={loading} aria-label="Attach file" className="grid size-11 shrink-0 place-items-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 disabled:opacity-40">
                 <PaperclipIcon className="size-5" />
               </button>
             </>
@@ -305,20 +292,26 @@ export function AgentChat({ mode = "public", compact = false, variant = "card" }
             onKeyDown={handleKeyDown}
             maxLength={maxLength}
             rows={1}
-            placeholder={isPrivate ? "Tell me something, or say ‘remember…’" : "Message Steven’s agent…"}
+            placeholder="Message"
             aria-label="Message"
             className="max-h-36 min-h-11 flex-1 resize-none bg-transparent px-2 py-2.5 text-[15px] leading-6 text-slate-950 outline-none placeholder:text-slate-400"
           />
-          <button disabled={loading || (!input.trim() && !attachment)} className="grid size-11 shrink-0 place-items-center rounded-full bg-slate-950 text-white transition hover:scale-[1.03] hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-30" aria-label="Send message">
+          <button disabled={loading || (!input.trim() && !attachment)} className="grid size-11 shrink-0 place-items-center rounded-full bg-slate-950 text-white transition hover:scale-[1.03] hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-30" aria-label="Send">
             <ArrowUpIcon className="size-5" />
           </button>
         </div>
-        <p className="mt-2 text-center text-[11px] text-slate-400">
-          {isPrivate ? "Say “private” or “never publish” to keep a memory owner-only." : "An AI reflection of Steven. It can still get things wrong."}
-        </p>
       </form>
     </section>
   );
+}
+
+function formatTurnCost(micros: number) {
+  if (micros > 0 && micros < 100) return "<$0.0001";
+  return `$${(micros / 1_000_000).toFixed(4)}`;
+}
+
+function formatBudget(micros: number) {
+  return `$${(micros / 1_000_000).toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
 }
 
 function ThinkingDots() {
@@ -327,6 +320,10 @@ function ThinkingDots() {
       {[0, 1, 2].map((index) => <span key={index} className="size-1.5 animate-bounce rounded-full bg-slate-400" style={{ animationDelay: `${index * 120}ms` }} />)}
     </span>
   );
+}
+
+function ComposeIcon({ className }: { className?: string }) {
+  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z" /></svg>;
 }
 
 function PaperclipIcon({ className }: { className?: string }) {

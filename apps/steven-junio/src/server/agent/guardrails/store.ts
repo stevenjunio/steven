@@ -21,6 +21,40 @@ function periods(now: Date) {
   };
 }
 
+export async function getMetaMonthlySpend(now = new Date()) {
+  const window = periods(now);
+  const prisma = getPrisma();
+  const [providerMonth, legacyMonth] = await Promise.all([
+    prisma.usageBucket.findUnique({
+      where: {
+        scope_key_window_periodStart: {
+          scope: "PUBLIC",
+          key: "provider:meta",
+          window: "MONTH",
+          periodStart: window.month.start,
+        },
+      },
+      select: { spentMicros: true, reservedMicros: true },
+    }),
+    prisma.usageBucket.aggregate({
+      where: { key: "global", window: "MONTH", periodStart: window.month.start },
+      _sum: { spentMicros: true, reservedMicros: true },
+    }),
+  ]);
+
+  return {
+    spentMicros: Number(
+      (providerMonth?.spentMicros ?? 0n) +
+        (legacyMonth._sum.spentMicros ?? 0n),
+    ),
+    reservedMicros: Number(
+      (providerMonth?.reservedMicros ?? 0n) +
+        (legacyMonth._sum.reservedMicros ?? 0n),
+    ),
+    limitMicros: META_PROVIDER_GUARDRAIL_LIMITS.monthlyBudgetMicros,
+  };
+}
+
 async function serializable<T>(operation: () => Promise<T>, attempts = 3): Promise<T> {
   try {
     return await operation();

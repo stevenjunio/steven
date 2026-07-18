@@ -3,7 +3,7 @@ import Link from "next/link";
 import MobileMenu from "./MobileMenu";
 
 const navMenu = [
-  { title: "My agent", link: "/ask" },
+  { title: "Chat", link: "/chat" },
   { title: "Contact", link: "/contact" },
 ];
 

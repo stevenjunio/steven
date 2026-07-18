@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Steven's Agent",
     short_name: "My Agent",
     description: "Talk with Steven's personal agent and add to its memory.",
-    start_url: "/admin/agent",
+    start_url: "/chat",
     display: "standalone",
     background_color: "#f5f5f4",
     theme_color: "#020617",

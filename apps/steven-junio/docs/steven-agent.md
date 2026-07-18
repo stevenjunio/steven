@@ -19,7 +19,7 @@ Steven Agent is a conversational, evolving AI representation of Steven. It uses 
 2. Set `AUTH0_ADMIN_SUBS` to Steven's immutable Auth0 `sub`, not an email address.
    Use `/login`; after authentication an unapproved account sees its own subject so it can be added safely.
 3. Apply `npx prisma migrate deploy` from `apps/steven-junio`.
-4. Open `/admin/agent` and add memories conversationally. Existing portfolio and blog sources can still be managed through the server actions if needed.
+4. Open `/chat` while signed in as the configured owner and add memories conversationally. Existing portfolio and blog sources can still be managed through the server actions if needed.
 5. Configure a paid Meta Model API account and set `META_MODEL_API_KEY`.
 6. Leave private calls disabled until Meta's paid data handling, retention, and training terms are explicitly approved.
 
@@ -27,7 +27,9 @@ Owner-added public memories are available to public chat immediately. Traditiona
 
 ## Memory workflow
 
-The owner uses `/admin/agent` as the primary memory interface. Messages such as “Remember that…” or “Save … to memory” become durable immediately. By default they can inform the public agent; including “private,” “never publish,” or similar language stores them as owner-only.
+`/chat` is the only agent interface. The server recognizes the configured owner and enables memory and file ingestion in the same conversation; everyone else gets the public agent. Messages such as “Remember that…” or “Save … to memory” become durable immediately. By default they can inform the public agent; including “private,” “never publish,” or similar language stores them as owner-only.
+
+Successful model responses show their run cost. The owner also sees current-month spend against the shared Meta budget.
 
 The composer accepts `.txt`, `.md`, `.pdf`, and `.docx` files up to 10 MB. Uploaded files become immutable, chunked knowledge revisions. They follow the same public-by-default and explicitly-private language rule.
 

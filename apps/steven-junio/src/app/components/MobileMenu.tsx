@@ -21,7 +21,7 @@ function UserMenuDropdown({ onNavigate }: { onNavigate: () => void }) {
             <Link href={"/contact"} onClick={onNavigate}>Contact</Link>
           </li>
           <li className="h-11 hover:underline">
-            <Link href={"/ask"} onClick={onNavigate}>My agent</Link>
+            <Link href={"/chat"} onClick={onNavigate}>Chat</Link>
           </li>
           <li className="mt-auto border-t border-white/15 pt-4 text-base text-white/65 hover:text-white">
             <Link href="/login" onClick={onNavigate} className="flex min-h-11 items-center gap-2">

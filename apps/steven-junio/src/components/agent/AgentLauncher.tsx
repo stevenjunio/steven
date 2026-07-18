@@ -7,7 +7,7 @@ import { AgentChat } from "./AgentChat";
 export function AgentLauncher() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  if (pathname.startsWith("/admin") || pathname.startsWith("/ask") || pathname.startsWith("/auth")) return null;
+  if (pathname.startsWith("/admin") || pathname.startsWith("/chat") || pathname.startsWith("/auth")) return null;
 
   return (
     <>

@@ -20,7 +20,7 @@ export default function siteMap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/ask`,
+      url: `${baseUrl}/chat`,
       changeFrequency: "daily",
       priority: 0.9,
     },

@@ -3,6 +3,7 @@ import { validatePrivateAgentMessage } from "@/server/agent/guardrails";
 import { agentJson } from "@/server/agent/http";
 import { AgentServiceError, askSteven } from "@/server/agent/service";
 import { extractKnowledgeUpload } from "@/server/agent/extract";
+import { getMetaMonthlySpend } from "@/server/agent/guardrails/store";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -41,7 +42,7 @@ export async function POST(request: Request) {
             attachment,
             onTextDelta: (delta) => send({ type: "delta", delta }),
           });
-          send({ type: "done", ...result });
+          send({ type: "done", ...result, monthlySpend: await getMetaMonthlySpend() });
         } catch (error) {
           send({
             type: "error",

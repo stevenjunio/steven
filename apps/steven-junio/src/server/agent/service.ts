@@ -160,6 +160,7 @@ export async function askSteven(input: {
       citations: [],
       abstained: false,
       memorySaved: true,
+      costMicros: 0,
     };
   }
 
@@ -286,7 +287,14 @@ export async function askSteven(input: {
         outputTokens: response.usage?.outputTokens ?? 1_200,
       });
     }
-    return { conversationId: conversation.id, messageId: assistantMessage.id, answer, citations, abstained: false };
+    return {
+      conversationId: conversation.id,
+      messageId: assistantMessage.id,
+      answer,
+      citations,
+      abstained: false,
+      costMicros: actualMicros,
+    };
   } catch (error) {
     if (input.scope === "PUBLIC") await releasePublicRequest({ requestId, runId: run.id });
     else await releasePrivateRequest({ requestId, runId: run.id });
