@@ -15,7 +15,7 @@ export default async function ChatPage() {
   const monthlySpend = ownerSub ? await getMetaMonthlySpend() : undefined;
 
   return (
-    <main className="h-dvh min-h-0 bg-[#f5f5f4] sm:p-4">
+    <main className="h-[calc(100dvh-68px)] min-h-0 bg-[#f5f5f4] sm:p-4">
       <div className="mx-auto h-full max-w-5xl">
         <h1 className="sr-only">Chat</h1>
         <AgentChat
