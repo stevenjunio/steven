@@ -20,6 +20,11 @@ export default function siteMap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: `${baseUrl}/ask`,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/blog`,
       changeFrequency: "weekly",
       priority: 0.8,

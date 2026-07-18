@@ -20,6 +20,9 @@ function UserMenuDropdown({ onNavigate }: { onNavigate: () => void }) {
           <li className="h-11 hover:underline">
             <Link href={"/contact"} onClick={onNavigate}>Contact</Link>
           </li>
+          <li className="h-11 hover:underline">
+            <Link href={"/ask"} onClick={onNavigate}>My agent</Link>
+          </li>
           <li className="mt-auto border-t border-white/15 pt-4 text-base text-white/65 hover:text-white">
             <Link href="/login" onClick={onNavigate} className="flex min-h-11 items-center gap-2">
               <LockIcon className="size-4" />

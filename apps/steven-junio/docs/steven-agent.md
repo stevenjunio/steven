@@ -1,6 +1,6 @@
 # Steven Agent operations
 
-Steven Agent is a source-grounded AI representation of Steven. It uses Muse Spark 1.1 for generation, Postgres for canonical knowledge and conversations, optional Voyage embeddings, and application-side spend enforcement.
+Steven Agent is a conversational, evolving AI representation of Steven. It uses Muse Spark 1.1 for streamed generation, Postgres for canonical knowledge and conversations, optional Voyage embeddings, and application-side spend enforcement.
 
 ## Safety boundaries
 
@@ -8,7 +8,7 @@ Steven Agent is a source-grounded AI representation of Steven. It uses Muse Spar
 - `PRIVATE` and `NEVER_PUBLISH` records never appear in public retrieval.
 - Private model calls stay disabled unless `STEVEN_AGENT_PRIVATE_MODEL_ENABLED=true`.
 - Public chat and its API stay unavailable unless `STEVEN_AGENT_PUBLIC_MODEL_ENABLED=true`.
-- Every generated factual answer must contain a valid retrieved-source citation. Answers without one become an abstention.
+- Steven-specific claims remain grounded in retrieved knowledge. General conversation is allowed without a matching source, but the agent must not invent Steven's personal views or history.
 - Muse receives no tools or web-search capability.
 - All Meta calls reserve their maximum estimated cost against one shared $5/month provider budget before generation. Public defaults additionally enforce $0.50/day, 10 questions per visitor/day, five/minute, and three concurrent requests.
 - Conversations persist until the visitor or owner deletes them. Raw IP addresses and raw session IDs are never stored.
@@ -19,19 +19,21 @@ Steven Agent is a source-grounded AI representation of Steven. It uses Muse Spar
 2. Set `AUTH0_ADMIN_SUBS` to Steven's immutable Auth0 `sub`, not an email address.
    Use `/login`; after authentication an unapproved account sees its own subject so it can be added safely.
 3. Apply `npx prisma migrate deploy` from `apps/steven-junio`.
-4. Open `/admin/knowledge`, select **Sync portfolio + blog**, review the sources, then publish a named release.
+4. Open `/admin/agent` and add memories conversationally. Existing portfolio and blog sources can still be managed through the server actions if needed.
 5. Configure a paid Meta Model API account and set `META_MODEL_API_KEY`.
 6. Leave private calls disabled until Meta's paid data handling, retention, and training terms are explicitly approved.
 
-Without a published release, the public agent intentionally abstains. Without `VOYAGE_API_KEY`, retrieval uses lexical matching only.
+Owner-added public memories are available to public chat immediately. Traditional portfolio and blog sources still require a published release. Without `VOYAGE_API_KEY`, retrieval uses lexical matching only.
 
-## Knowledge workflow
+## Memory workflow
 
-The admin can add pasted Markdown/plain text or upload `.txt`, `.md`, `.pdf`, and `.docx` files up to 10 MB. Each edit creates an immutable revision and fresh chunks. `modelAccess` can independently prevent an approved source from being sent to any model.
+The owner uses `/admin/agent` as the primary memory interface. Messages such as “Remember that…” or “Save … to memory” become durable immediately. By default they can inform the public agent; including “private,” “never publish,” or similar language stores them as owner-only.
+
+The composer accepts `.txt`, `.md`, `.pdf`, and `.docx` files up to 10 MB. Uploaded files become immutable, chunked knowledge revisions. They follow the same public-by-default and explicitly-private language rule.
 
 Publishing creates a new immutable snapshot and retires the previous release. A source classified public does not become visitor-visible merely because it exists.
 
-Private chat messages containing “remember” create memory candidates. MCP clients may also call `propose_steven_memory`. Steven must approve each candidate in `/admin/agent` before it becomes a durable fact.
+The older candidate-review tables remain compatible with MCP memory proposals, but chat-originated owner memories do not require a second approval step because the authenticated owner is already the authority.
 
 ## API and MCP
 

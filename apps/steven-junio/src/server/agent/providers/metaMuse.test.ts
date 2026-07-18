@@ -93,6 +93,42 @@ test("normalizes top-level output text and alternate usage field names", () => {
   );
 });
 
+test("streams text deltas from the Meta Responses API", async () => {
+  const events = [
+    { type: "response.output_text.delta", delta: "Hello" },
+    { type: "response.output_text.delta", delta: " there." },
+    {
+      type: "response.completed",
+      response: {
+        id: "resp_stream",
+        model: "muse-spark-1.1",
+        output: [{ type: "message", role: "assistant", content: [{ type: "output_text", text: "Hello there." }] }],
+        usage: { input_tokens: 12, output_tokens: 3 },
+      },
+    },
+  ];
+  const provider = new MetaMuseProvider({
+    apiKey: "meta-secret-key",
+    fetch: (async (_url, init) => {
+      assert.equal(JSON.parse(String(init?.body)).stream, true);
+      return new Response(events.map((event) => `data: ${JSON.stringify(event)}\n\n`).join(""), {
+        headers: { "Content-Type": "text/event-stream" },
+      });
+    }) as typeof fetch,
+  });
+  const deltas: string[] = [];
+
+  const result = await provider.generate({
+    messages: [{ role: "user", content: "Hello" }],
+    onTextDelta: (delta) => deltas.push(delta),
+  });
+
+  assert.deepEqual(deltas, ["Hello", " there."]);
+  assert.equal(result.answer, "Hello there.");
+  assert.equal(result.responseId, "resp_stream");
+  assert.equal(result.usage?.totalTokens, 15);
+});
+
 test("ignores reasoning and tool calls when extracting an answer", () => {
   assert.equal(
     parseMetaMuseAnswer({

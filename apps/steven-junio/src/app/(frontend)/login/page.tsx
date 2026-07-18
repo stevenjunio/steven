@@ -46,7 +46,7 @@ export default async function OwnerLoginPage() {
             <p className="mt-6 text-sm font-semibold text-blue-700">Steven only</p>
             <h1 className="mt-1 text-3xl font-bold tracking-tight">Owner access</h1>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              Sign in to open Steven&apos;s private agent and memory workspace. The chat remains unavailable to public visitors.
+              Sign in to talk with your private agent, add memories in plain language, and attach files from your phone.
             </p>
             {auth0 ? (
               <a href="/auth/login?returnTo=/admin/agent" className="mt-7 inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2">

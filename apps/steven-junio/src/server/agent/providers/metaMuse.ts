@@ -152,6 +152,90 @@ function isRetryableStatus(status: number) {
   return status === 408 || status === 409 || status === 429 || status >= 500;
 }
 
+function streamDelta(value: unknown) {
+  if (!isRecord(value)) return "";
+  if (
+    (value.type === "response.output_text.delta" || value.type === "output_text.delta") &&
+    typeof value.delta === "string"
+  ) {
+    return value.delta;
+  }
+
+  if (!Array.isArray(value.choices)) return "";
+  const choice = value.choices.find(isRecord);
+  if (!choice || !isRecord(choice.delta)) return "";
+  return typeof choice.delta.content === "string" ? choice.delta.content : "";
+}
+
+async function parseMetaMuseStream(
+  response: Response,
+  model: string,
+  onTextDelta: (delta: string) => void,
+) {
+  if (!response.body) {
+    throw new AgentProviderError("Meta Model API returned an empty stream.", {
+      code: "invalid_response",
+    });
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let answer = "";
+  let completed: unknown;
+
+  const consume = (line: string) => {
+    if (!line.startsWith("data:")) return;
+    const data = line.slice(5).trim();
+    if (!data || data === "[DONE]") return;
+
+    let event: unknown;
+    try {
+      event = JSON.parse(data);
+    } catch {
+      return;
+    }
+
+    const delta = streamDelta(event);
+    if (delta) {
+      answer += delta;
+      onTextDelta(delta);
+    }
+    if (isRecord(event) && event.type === "response.completed") {
+      completed = event.response;
+    }
+  };
+
+  while (true) {
+    const { done, value } = await reader.read();
+    buffer += decoder.decode(value, { stream: !done });
+    const lines = buffer.split(/\r?\n/);
+    buffer = lines.pop() ?? "";
+    lines.forEach(consume);
+    if (done) break;
+  }
+  if (buffer) consume(buffer);
+
+  if (completed) {
+    const parsed = parseMetaMuseResponse(completed, model);
+    if (!answer) {
+      answer = parsed.answer;
+      onTextDelta(answer);
+    }
+    return { ...parsed, answer: answer.trim() };
+  }
+  if (!answer.trim()) {
+    throw new AgentProviderError("Meta Model API returned no streamed answer.", {
+      code: "invalid_response",
+    });
+  }
+  return {
+    answer: answer.trim(),
+    provider: META_MUSE_PROVIDER_ID,
+    model,
+  };
+}
+
 export class MetaMuseProvider implements AgentProvider {
   readonly id = META_MUSE_PROVIDER_ID;
   readonly model: string;
@@ -237,6 +321,7 @@ export class MetaMuseProvider implements AgentProvider {
           reasoning: { effort: "low" },
           max_output_tokens: this.maxOutputTokens,
           tools: [],
+          ...(request.onTextDelta ? { stream: true } : {}),
         }),
         signal: controller.signal,
       });
@@ -249,6 +334,14 @@ export class MetaMuseProvider implements AgentProvider {
             retryable: isRetryableStatus(response.status),
             status: response.status,
           },
+        );
+      }
+
+      if (request.onTextDelta) {
+        return await parseMetaMuseStream(
+          response,
+          this.model,
+          request.onTextDelta,
         );
       }
 

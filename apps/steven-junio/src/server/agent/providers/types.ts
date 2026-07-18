@@ -8,6 +8,7 @@ export type AgentMessage = {
 export type AgentProviderRequest = {
   instructions?: string;
   messages: ReadonlyArray<AgentMessage>;
+  onTextDelta?: (delta: string) => void;
   signal?: AbortSignal;
 };
 

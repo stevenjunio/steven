@@ -143,7 +143,10 @@ export async function retrieveKnowledge(query: string, scope: "PUBLIC" | "PRIVAT
           ? {
               scope: "PUBLIC",
               revision: { status: "READY", source: { modelAccess: true, scope: "PUBLIC" } },
-              releaseItems: { some: { release: { status: "PUBLISHED" } } },
+              OR: [
+                { revision: { source: { kind: "OWNER_MEMORY" } } },
+                { releaseItems: { some: { release: { status: "PUBLISHED" } } } },
+              ],
             }
           : {
               scope: { in: ["PUBLIC", "PRIVATE", "NEVER_PUBLISH"] },
@@ -153,13 +156,14 @@ export async function retrieveKnowledge(query: string, scope: "PUBLIC" | "PRIVAT
       orderBy: { createdAt: "desc" },
       take: 300,
     }),
-    scope === "PRIVATE"
-      ? prisma.memoryFact.findMany({
-          where: { scope: { in: ["PRIVATE", "NEVER_PUBLISH"] }, archivedAt: null },
-          orderBy: { createdAt: "desc" },
-          take: 100,
-        })
-      : Promise.resolve([]),
+    prisma.memoryFact.findMany({
+      where: {
+        scope: scope === "PUBLIC" ? "PUBLIC" : { in: ["PUBLIC", "PRIVATE", "NEVER_PUBLISH"] },
+        archivedAt: null,
+      },
+      orderBy: { createdAt: "desc" },
+      take: 100,
+    }),
   ]);
   const knowledgeRows = rows as Prisma.KnowledgeChunkGetPayload<{ include: { revision: { include: { source: true } } } }>[];
   const [queryEmbedding] = await createEmbeddings([query]);
@@ -177,12 +181,12 @@ export async function retrieveKnowledge(query: string, scope: "PUBLIC" | "PRIVAT
         score: lexicalScore(`${row.revision.source.name}\n${row.content}`, terms) + semantic,
       } satisfies RetrievedKnowledge;
     });
-  const memories = memoryFacts.map((fact) => ({
+  const memories = memoryFacts.map((fact, index) => ({
     id: `memory:${fact.id}`,
     sourceName: "Approved memory",
     sourceUrl: null,
     content: fact.content,
-    score: lexicalScore(fact.content, terms),
+    score: lexicalScore(fact.content, terms) + (index < 4 ? 0.35 : 0),
   } satisfies RetrievedKnowledge));
   const candidates = terms.length === 0
     ? [...chunks, ...memories].map((item) => ({ ...item, score: item.score || 1 }))

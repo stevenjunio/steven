@@ -3,7 +3,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "@radix-ui/themes/styles.css";
 import { Analytics } from "@vercel/analytics/react";
 import { Theme } from "@radix-ui/themes";
-import { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.stevenjunio.com"),
@@ -12,6 +12,12 @@ export const metadata: Metadata = {
     template: "%s | Steven Junio",
   },
   description: "Steven Junio's software development portfolio and projects.",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "My Agent",
+  },
   alternates: {
     canonical: "/",
   },
@@ -36,6 +42,11 @@ export const metadata: Metadata = {
     description: "Steven Junio's software development portfolio and projects.",
     images: ["/images/steven-junio-screenshot.webp"],
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#020617",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

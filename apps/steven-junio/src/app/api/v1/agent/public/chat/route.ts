@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { validatePublicAgentMessage } from "@/server/agent/guardrails";
 import { agentJson, publicVisitor } from "@/server/agent/http";
 import { AgentServiceError, askSteven } from "@/server/agent/service";
@@ -18,14 +18,47 @@ export async function POST(request: NextRequest) {
     if (!validation.ok) return agentJson({ error: validation.code, details: validation }, { status: 400 });
     const visitor = publicVisitor(request);
     if (visitor.shouldSetCookie) visitorSessionId = visitor.sessionId;
-    const result = await askSteven({
-      scope: "PUBLIC",
-      message: validation.value,
-      conversationId: typeof body.conversationId === "string" ? body.conversationId : undefined,
-      visitorId: visitor.visitorId,
-      rateLimitIds: visitor.rateLimitIds,
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      async start(controller) {
+        const send = (event: unknown) => controller.enqueue(encoder.encode(`${JSON.stringify(event)}\n`));
+        try {
+          const result = await askSteven({
+            scope: "PUBLIC",
+            message: validation.value,
+            conversationId: typeof body.conversationId === "string" ? body.conversationId : undefined,
+            visitorId: visitor.visitorId,
+            rateLimitIds: visitor.rateLimitIds,
+            onTextDelta: (delta) => send({ type: "delta", delta }),
+          });
+          send({ type: "done", ...result });
+        } catch (error) {
+          send({
+            type: "error",
+            message: error instanceof AgentServiceError ? error.message : "AI Steven is temporarily unavailable.",
+          });
+        } finally {
+          controller.close();
+        }
+      },
     });
-    return agentJson(result, undefined, visitorSessionId);
+    const response = new NextResponse(stream, {
+      headers: {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/x-ndjson; charset=utf-8",
+        "X-Accel-Buffering": "no",
+      },
+    });
+    if (visitorSessionId) {
+      response.cookies.set("steven_agent_visitor", visitorSessionId, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 60 * 60 * 24 * 365,
+        path: "/",
+      });
+    }
+    return response;
   } catch (error) {
     const status = error instanceof AgentServiceError ? error.status : 500;
     const code = error instanceof AgentServiceError ? error.code : "agent_unavailable";
