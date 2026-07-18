@@ -2,7 +2,13 @@
 import Link from "next/link";
 import { useState } from "react";
 
-function UserMenuDropdown({ onNavigate }: { onNavigate: () => void }) {
+function UserMenuDropdown({
+  isOwner,
+  onNavigate,
+}: {
+  isOwner: boolean;
+  onNavigate: () => void;
+}) {
   return (
     <div
       id="mobile-navigation"
@@ -20,9 +26,11 @@ function UserMenuDropdown({ onNavigate }: { onNavigate: () => void }) {
           <li className="h-11 hover:underline">
             <Link href={"/contact"} onClick={onNavigate}>Contact</Link>
           </li>
-          <li className="h-11 hover:underline">
-            <Link href={"/chat"} onClick={onNavigate}>Chat</Link>
-          </li>
+          {isOwner && (
+            <li className="h-11 hover:underline">
+              <Link href={"/chat"} onClick={onNavigate}>Chat</Link>
+            </li>
+          )}
           <li className="mt-auto border-t border-white/15 pt-4 text-base text-white/65 hover:text-white">
             <Link href="/login" onClick={onNavigate} className="flex min-h-11 items-center gap-2">
               <LockIcon className="size-4" />
@@ -35,7 +43,7 @@ function UserMenuDropdown({ onNavigate }: { onNavigate: () => void }) {
   );
 }
 
-export default function MobileMenu() {
+export default function MobileMenu({ isOwner }: { isOwner: boolean }) {
   const [menuVisible, setMenuVisible] = useState(false);
   const toggleMenu = () => setMenuVisible(!menuVisible);
 
@@ -65,7 +73,12 @@ export default function MobileMenu() {
           />
         </svg>
       </button>
-      {menuVisible && <UserMenuDropdown onNavigate={() => setMenuVisible(false)} />}
+      {menuVisible && (
+        <UserMenuDropdown
+          isOwner={isOwner}
+          onNavigate={() => setMenuVisible(false)}
+        />
+      )}
     </div>
   );
 }

@@ -23,11 +23,11 @@ Steven Agent is a conversational, evolving AI representation of Steven. It uses 
 5. Configure a paid Meta Model API account and set `META_MODEL_API_KEY`.
 6. Leave private calls disabled until Meta's paid data handling, retention, and training terms are explicitly approved.
 
-Owner-added public memories are available to public chat immediately. Traditional portfolio and blog sources still require a published release. Without `VOYAGE_API_KEY`, retrieval uses lexical matching only.
+Owner-added public memories will be available when public chat is enabled. Traditional portfolio and blog sources still require a published release. Without `VOYAGE_API_KEY`, retrieval uses lexical matching only.
 
 ## Memory workflow
 
-`/chat` is the only agent interface. The server recognizes the configured owner and enables memory and file ingestion in the same conversation; everyone else gets the public agent. Messages such as “Remember that…” or “Save … to memory” become durable immediately. By default they can inform the public agent; including “private,” “never publish,” or similar language stores them as owner-only.
+`/chat` is currently owner-only. The server requires the configured Auth0 owner subject and enables memory and file ingestion in the same conversation. Messages such as “Remember that…” or “Save … to memory” become durable immediately. By default they can inform a future public agent; including “private,” “never publish,” or similar language stores them as owner-only.
 
 Successful model responses show their run cost. The owner also sees current-month spend against the shared Meta budget.
 

@@ -1,13 +1,26 @@
+"use client";
+
 import NavItem from "./NavItem";
 import Link from "next/link";
 import MobileMenu from "./MobileMenu";
+import { useEffect, useState } from "react";
 
-const navMenu = [
-  { title: "Chat", link: "/chat" },
-  { title: "Contact", link: "/contact" },
-];
+export default function HideableHeader() {
+  const [isOwner, setIsOwner] = useState(false);
+  const navMenu = [
+    ...(isOwner ? [{ title: "Chat", link: "/chat" }] : []),
+    { title: "Contact", link: "/contact" },
+  ];
 
-export default async function HideableHeader() {
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/auth-subject", { cache: "no-store", signal: controller.signal })
+      .then((response) => response.json())
+      .then((result: { isOwner?: boolean }) => setIsOwner(result.isOwner === true))
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, []);
+
   return (
     <header
       className={`sm:w-full bg-foreground py-4 text-white text-neutral sticky top-0 z-10 shadow-lg transition-all duration-300 `}
@@ -33,7 +46,7 @@ export default async function HideableHeader() {
             </li>
           </ul>
         </nav>
-        <MobileMenu />
+        <MobileMenu isOwner={isOwner} />
       </div>
     </header>
   );
